@@ -1,0 +1,57 @@
+{
+	"name": "smallpics/smallpics-php",
+	"description": "A PHP client library for generating URLs with SmallPics.io",
+	"type": "library",
+	"version": "0.1.0",
+	"keywords": [
+		"smallpics",
+		"php",
+		"library",
+		"images",
+		"processing"
+	],
+	"license": "proprietary",
+	"support": {
+		"email": "support@smallpics.io",
+		"issues": "https://github.com/smallpics/smallpics-php/issues?state=open",
+		"source": "https://github.com/smallpics/smallpics-php",
+		"docs": "https://github.com/smallpics/smallpics-php/blob/develop/README.md"
+	},
+	"require": {
+		"php": ">=8.2.0"
+	},
+	"require-dev": {
+		"fostercommerce/ecs": "dev-main",
+		"fostercommerce/rector": "dev-main",
+		"pestphp/pest": "^3.8",
+		"phpstan/phpstan": "^1.12"
+	},
+	"autoload": {
+		"psr-4": {
+			"smallpics\\smallpics\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"smallpics\\smallpics\\tests\\": "tests/"
+		}
+	},
+	"config": {
+		"sort-packages": true,
+		"allow-plugins": {
+			"yiisoft/yii2-composer": true,
+			"craftcms/plugin-installer": true,
+			"pestphp/pest-plugin": true
+		}
+	},
+	"prefer-stable": true,
+	"minimum-stability": "dev",
+	"scripts": {
+		"phpstan": "phpstan --memory-limit=1G",
+		"ecs:check": "ecs check --ansi --memory-limit=1G",
+		"ecs:fix": "ecs check --ansi --fix --memory-limit=1G",
+		"rector:fix": "rector process --config rector.php",
+		"rector:dry-run": "rector process --dry-run --config rector.php",
+		"test": "pest"
+	}
+}
