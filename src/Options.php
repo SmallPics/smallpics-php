@@ -182,8 +182,11 @@ class Options implements \Stringable
 			$method = 'set' . $this->toPascalCase($option);
 			if (method_exists($this, $method)) {
 				// We want to make sure that we can set the individual arguments from an associative array or a regular array.
-				$args = is_array($value) ? $value : [$value];
-				$this->{$method}(...$args);
+				if (is_array($value)) {
+					$this->{$method}(...$value);
+				} else {
+					$this->{$method}($value);
+				}
 			}
 		}
 	}

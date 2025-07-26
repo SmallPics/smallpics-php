@@ -18,10 +18,15 @@ test('can set options with constructor array', function (): void {
 		'height' => 400,
 		'fit' => 'fill',
 		'watermarkPosition' => 'center',
+		'border' => [
+			'width' => 10,
+			'color' => '000000',
+			'borderMethod' => 'overlay',
+		],
 	]);
 
 	expect($options)->toBeOptions();
-	expect($options->toString())->toBe('w=300&h=400&fit=fill&markpos=center');
+	expect($options->toString())->toBe('w=300&h=400&fit=fill&markpos=center&border=10,000000,overlay');
 });
 
 test('can handle complex options', function (): void {
@@ -31,10 +36,11 @@ test('can handle complex options', function (): void {
 		->setWatermarkPosition('center')
 		->setWatermarkAlpha(50)
 		->setQuality(80)
-		->setFormat('png');
+		->setFormat('png')
+		->setBorder(10, '000000', 'overlay');
 
 	expect($options)->toBeOptions();
-	expect($options->toString())->toBe('sharp=5&fit=fill&markpos=center&markalpha=50&q=80&fm=png');
+	expect($options->toString())->toBe('sharp=5&fit=fill&markpos=center&markalpha=50&q=80&fm=png&border=10,000000,overlay');
 });
 
 test('magic __toString behaves like toString method', function (): void {
