@@ -1,6 +1,6 @@
 {
 	"name": "smallpics/smallpics-php",
-	"description": "A PHP client library for generating URLs with SmallPics.io",
+	"description": "A PHP client library for generating URLs with SmallPics",
 	"type": "library",
 	"version": "0.1.0",
 	"keywords": [
@@ -10,12 +10,12 @@
 		"images",
 		"processing"
 	],
-	"license": "proprietary",
+	"license": "MIT",
 	"support": {
 		"email": "support@smallpics.io",
 		"issues": "https://github.com/smallpics/smallpics-php/issues?state=open",
 		"source": "https://github.com/smallpics/smallpics-php",
-		"docs": "https://github.com/smallpics/smallpics-php/blob/develop/README.md"
+		"docs": "https://github.com/smallpics/smallpics-php/blob/main/README.md"
 	},
 	"require": {
 		"php": ">=8.2.0"

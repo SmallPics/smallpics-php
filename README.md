@@ -1,6 +1,6 @@
 # smallpics-php
 
-A PHP client library for generating URLs with SmallPics.io. This package provides a simple way to build URLs with SmallPics.io processing options.
+A PHP client library for generating URLs with [SmallPics](https://www.smallpics.io). This package provides a simple way to build URLs with SmallPics processing options.
 
 ## Installation
 
