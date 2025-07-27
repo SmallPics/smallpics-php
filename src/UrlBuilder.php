@@ -9,8 +9,7 @@ class UrlBuilder
 	 */
 	public function __construct(
 		protected string $host,
-		protected ?string $key = null,
-		protected ?string $salt = null,
+		protected ?string $secret = null,
 	) {
 	}
 
@@ -29,7 +28,7 @@ class UrlBuilder
 
 		$unsignedUrl = "https://{$this->host}/{$sourceUrl}?{$optionsString}";
 
-		if ($this->key === null || $this->salt === null) {
+		if ($this->secret === null) {
 			return $unsignedUrl;
 		}
 
@@ -41,11 +40,14 @@ class UrlBuilder
 	 */
 	protected function generateSignature(string $path): string
 	{
-		$keyBin = pack('H*', $this->key);
-		$saltBin = pack('H*', $this->salt);
+		// We always want to generate a signature for a path that exludes the signature param and value
+		$path = preg_replace('/&?signature=[^&]*/', '', $path);
 
-		$signature = hash_hmac('sha256', $saltBin . $path, $keyBin, true);
+		if ($path === null || $this->secret === null) {
+			return '';
+		}
 
+		$signature = hash_hmac('sha256', $path, $this->secret, true);
 		$signature = base64_encode($signature);
 		// Make it neat
 		$signature = str_replace(['+', '/', '='], '', $signature);

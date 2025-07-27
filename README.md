@@ -45,20 +45,16 @@ The values can either be a single value, an array of values, or an associative a
 ```php
 // Create Options object with array of values
 $options = new Options([
-    'width' => 300,
-    'height' => 400,
-    'resize' => [
-        'width' => 300,
-        'height' => 400,
-        'enlarge' => false,
-        'resize_type' => 'fill',
-    ],
-    'gravity' => 'sm',
-    'png_options' => [
-        'interlaced' => true,
-        'quantize' => false,
-    ],
-]);
+		'width' => 300,
+		'height' => 400,
+		'fit' => 'fill',
+		'watermarkPosition' => 'center',
+		'border' => [
+			'width' => 10,
+			'color' => '000000',
+			'borderMethod' => 'overlay',
+		],
+	]);
 ```
 
 ### Building URLs
@@ -81,46 +77,22 @@ $imageUrl = 'https://example.com/images/image.jpg';
 $url = $builder->buildUrl($imageUrl, $options);
 
 echo $url;
-// Output: https://images.my-origin.com/unsafe/preset:sharp/resize:fill:300:400:0/gravity:sm/quality:80/format:png/plain/https://example.com/images/image.jpg
-```
-
-### Encoded URLs
-
-```php
-use smallpics\smallpics\Options;
-use smallpics\smallpics\UrlBuilder;
-
-// Create options object
-$options = new Options();
-$options
-    ->setWidth(300)
-    ->setHeight(400);
-
-// Create URL builder
-$builder = new UrlBuilder('https://images.my-origin.com');
-
-// Build URL with encoded source
-$imageUrl = 'images/image.jpg';
-$url = $builder->buildUrl($imageUrl, $options);
-
-echo $url;
-// Output: https://images.my-origin.com/images/image.jpg?width=300&height=400
+// Output: https://images.my-origin.com/images/image.jpg?q=80&fm=png
 ```
 
 ### Signed URLs
 
 ```php
 // Create URL builder with signing keys
-$key = '0123456789abcdef0123456789abcdef';
-$salt = 'fedcba9876543210fedcba9876543210';
-$builder = new UrlBuilder('https://images.my-origin.com', $key, $salt);
+$secret = '0123456789abcdef0123456789abcdef';
+$builder = new UrlBuilder('https://images.my-origin.com', $secret);
 
 // Build signed URL
 $imageUrl = 'images/image.jpg';
 $url = $builder->buildUrl($imageUrl, $options);
 
 echo $url;
-// Output will include a signature: https://images.my-origin.com/images/image.jpg?width=300&height=400&signature=[signature]
+// Output will include a signature: https://images.my-origin.com/images/image.jpg?signature=[signature]
 ```
 
 ## Development

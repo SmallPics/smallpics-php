@@ -231,13 +231,12 @@ test('can generate signed URLs', function (): void {
 		'height' => 400,
 	]);
 
-	$key = '0123456789abcdef0123456789abcdef';
-	$salt = 'fedcba9876543210fedcba9876543210';
+	$secret = 'my-secret-value';
 
-	$builder = new UrlBuilder('https://images.example.com', $key, $salt);
+	$builder = new UrlBuilder('images.example.com', $secret);
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://https://images.example.com/images/image.jpg?w=300&h=400&signature=X3DbGrEoMMGYE5xPsb0tOmEIdgvo3VbQfKFddxZwx2Q');
+	expect($url)->toBe('https://images.example.com/images/image.jpg?w=300&h=400&signature=S0b0bvBhc0kh2L6WRhcYGaRVT1LsuzWwONsdROoBk');
 });
 
 test('can generate complex signed URLs', function (): void {
@@ -247,11 +246,10 @@ test('can generate complex signed URLs', function (): void {
 		->setQuality(80)
 		->setFormat('png');
 
-	$key = '0123456789abcdef0123456789abcdef';
-	$salt = 'fedcba9876543210fedcba9876543210';
+	$secret = 'my-secret-value';
 
-	$builder = new UrlBuilder('https://images.example.com', $key, $salt);
+	$builder = new UrlBuilder('images.example.com', $secret);
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://https://images.example.com/images/image.jpg?border=5,ff0000,overlay&q=80&fm=png&signature=S0n8P4GVg2FErH3Yg3vVAC7XnRaLexs4UWfaa2r4');
+	expect($url)->toBe('https://images.example.com/images/image.jpg?border=5,ff0000,overlay&q=80&fm=png&signature=NBzER5uyLXXVZGFMAXWjthvfYWCVaj754FoMWujdaeI');
 });
