@@ -26,7 +26,7 @@ class UrlBuilder
 		$options ??= new Options();
 		$optionsString = (string) $options;
 
-		$unsignedUrl = "https://{$this->host}/{$sourceUrl}?{$optionsString}";
+		$unsignedUrl = "{$this->host}/{$sourceUrl}?{$optionsString}";
 
 		if ($this->secret === null) {
 			return $unsignedUrl;
