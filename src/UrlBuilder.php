@@ -5,11 +5,17 @@ namespace smallpics\smallpics;
 class UrlBuilder
 {
 	/**
+	 * @var ?string
+	 */
+	public const TRANSFORM_PATH_PREFIX = 't';
+
+	/**
 	 * @param string $host The host to use for the URL
 	 */
 	public function __construct(
 		protected string $host,
 		protected ?string $secret = null,
+		protected ?string $transformPathPrefix = self::TRANSFORM_PATH_PREFIX,
 	) {
 	}
 
@@ -26,7 +32,8 @@ class UrlBuilder
 		$options ??= new Options();
 		$optionsString = (string) $options;
 
-		$unsignedUrl = "{$this->host}/{$sourceUrl}?{$optionsString}";
+		$transformPath = $this->transformPathPrefix !== null && $this->transformPathPrefix !== '' ? "/{$this->transformPathPrefix}" : '';
+		$unsignedUrl = "{$this->host}{$transformPath}/{$sourceUrl}?{$optionsString}";
 
 		if ($this->secret === null) {
 			return $unsignedUrl;

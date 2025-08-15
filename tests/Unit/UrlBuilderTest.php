@@ -13,7 +13,7 @@ test('can build basic URL', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?w=300&h=400&fit=fill&markpos=center');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?w=300&h=400&fit=fill&markpos=center');
 });
 
 test('can build a basic URL without any options', function (): void {
@@ -22,14 +22,14 @@ test('can build a basic URL without any options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?');
 });
 
 test('can build URL with null options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', null);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?');
 });
 
 test('can handle URLs with leading/trailing slashes', function (): void {
@@ -40,7 +40,7 @@ test('can handle URLs with leading/trailing slashes', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('/images/image.jpg/', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?w=300');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?w=300');
 });
 
 test('can build URL with quality and format options', function (): void {
@@ -54,7 +54,7 @@ test('can build URL with quality and format options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?w=300&h=400&q=85&fm=webp');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?w=300&h=400&q=85&fm=webp');
 });
 
 test('can build URL with watermark options', function (): void {
@@ -68,7 +68,7 @@ test('can build URL with watermark options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?w=300&h=400&markpos=center&markalpha=50');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?w=300&h=400&markpos=center&markalpha=50');
 });
 
 test('can build URL with enhancement options', function (): void {
@@ -84,7 +84,7 @@ test('can build URL with enhancement options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?w=300&h=400&bri=10&con=15&sharp=3&blur=2');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?w=300&h=400&bri=10&con=15&sharp=3&blur=2');
 });
 
 test('can build URL with filter options', function (): void {
@@ -97,7 +97,7 @@ test('can build URL with filter options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?w=300&h=400&filt=grayscale');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?w=300&h=400&filt=grayscale');
 });
 
 test('can build URL with crop options', function (): void {
@@ -107,7 +107,7 @@ test('can build URL with crop options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?crop=100,200,10,20');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?crop=100,200,10,20');
 });
 
 test('can build URL with background and border options', function (): void {
@@ -118,7 +118,7 @@ test('can build URL with background and border options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?bg=ffffff&border=5,ff0000,overlay');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?bg=ffffff&border=5,ff0000,overlay');
 });
 
 test('can build URL with boolean options', function (): void {
@@ -128,7 +128,7 @@ test('can build URL with boolean options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?interlace=1');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?interlace=1');
 });
 
 test('can build URL with fit options', function (): void {
@@ -138,7 +138,7 @@ test('can build URL with fit options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?fit=contain');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?fit=contain');
 });
 
 test('can build URL with orientation and flip options', function (): void {
@@ -149,7 +149,7 @@ test('can build URL with orientation and flip options', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?or=90&flip=h');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?or=90&flip=h');
 });
 
 test('can build URL with device pixel ratio', function (): void {
@@ -159,7 +159,7 @@ test('can build URL with device pixel ratio', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?dpr=2');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?dpr=2');
 });
 
 test('can build URL with gamma adjustment', function (): void {
@@ -169,7 +169,7 @@ test('can build URL with gamma adjustment', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?gam=1.5');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?gam=1.5');
 });
 
 test('can build URL with pixelate effect', function (): void {
@@ -179,7 +179,7 @@ test('can build URL with pixelate effect', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?pixel=10');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?pixel=10');
 });
 
 test('can build URL with watermark path', function (): void {
@@ -189,7 +189,7 @@ test('can build URL with watermark path', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?mark=/watermarks/logo.png');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?mark=/watermarks/logo.png');
 });
 
 test('can build URL with watermark dimensions', function (): void {
@@ -200,7 +200,7 @@ test('can build URL with watermark dimensions', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?markw=100&markh=50');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?markw=100&markh=50');
 });
 
 test('can build URL with watermark offsets and padding', function (): void {
@@ -212,7 +212,7 @@ test('can build URL with watermark offsets and padding', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?markx=10&marky=20&markpad=5');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?markx=10&marky=20&markpad=5');
 });
 
 test('can build URL with watermark fit', function (): void {
@@ -222,7 +222,7 @@ test('can build URL with watermark fit', function (): void {
 	$builder = new UrlBuilder('https://images.example.com');
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?markfit=contain');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?markfit=contain');
 });
 
 test('can generate signed URLs', function (): void {
@@ -236,7 +236,7 @@ test('can generate signed URLs', function (): void {
 	$builder = new UrlBuilder('https://images.example.com', $secret);
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?w=300&h=400&signature=S0b0bvBhc0kh2L6WRhcYGaRVT1LsuzWwONsdROoBk');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?w=300&h=400&signature=Qaqt9agh3JLg4LeWmRqqd9qnD9bjPbVqSzrXAXTaY');
 });
 
 test('can generate complex signed URLs', function (): void {
@@ -251,5 +251,5 @@ test('can generate complex signed URLs', function (): void {
 	$builder = new UrlBuilder('https://images.example.com', $secret);
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?border=5,ff0000,overlay&q=80&fm=png&signature=NBzER5uyLXXVZGFMAXWjthvfYWCVaj754FoMWujdaeI');
+	expect($url)->toBe('https://images.example.com/t/images/image.jpg?border=5,ff0000,overlay&q=80&fm=png&signature=hE2e5tLayrNP0pgSaxJLFOMfi0PES2erIzhNYR7QqQ');
 });
