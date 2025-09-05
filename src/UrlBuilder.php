@@ -47,6 +47,8 @@ class UrlBuilder
 	 */
 	protected function generateSignature(string $path): string
 	{
+		$path = urldecode($path);
+
 		// We always want to generate a signature for a path that exludes the signature param and value
 		$path = preg_replace('/&?signature=[^&]*/', '', $path);
 

@@ -253,3 +253,20 @@ test('can generate complex signed URLs', function (): void {
 
 	expect($url)->toBe('https://images.example.com/t/images/image.jpg?border=5,ff0000,overlay&q=80&fm=png&signature=hE2e5tLayrNP0pgSaxJLFOMfi0PES2erIzhNYR7QqQ');
 });
+
+test('generates signature with unicode characters', function (): void {
+	$options = createOptions()
+		->setOrigin('main')
+		->setFormat('avif')
+		->setQuality(90)
+		->setWidth(600)
+		->setHeight(600)
+		->setFit(\smallpics\smallpics\enums\Fit::CONTAIN);
+
+	$secret = 'my-secret-value';
+
+	$builder = new UrlBuilder('https://images.example.com', $secret);
+	$url = $builder->buildUrl('images/unicode-%E9%BD%90%E8%89%B2-0.png', $options);
+
+	expect($url)->toBe('https://images.example.com/t/images/unicode-%E9%BD%90%E8%89%B2-0.png?origin=main&fm=avif&q=90&w=600&h=600&fit=contain&signature=YjnlgXrNQXqmrfa2qPxXhbmSqgQMvwMjGoQH9YBQxs');
+});
