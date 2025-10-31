@@ -558,7 +558,7 @@ class Options implements \Stringable
 		return $value;
 	}
 
-	public function setWatermarkWidth(int $watermarkWidth): self
+	public function setWatermarkWidth(int|string $watermarkWidth): self
 	{
 		$this->options[self::WATERMARK_WIDTH] = $watermarkWidth;
 		return $this;
@@ -567,15 +567,15 @@ class Options implements \Stringable
 	/**
 	 * Get watermark width
 	 */
-	public function getWatermarkWidth(): null|int
+	public function getWatermarkWidth(): null|int|string
 	{
-		/** @var null|int $value */
+		/** @var null|int|string $value */
 		$value = $this->options[self::WATERMARK_WIDTH] ?? null;
 
 		return $value;
 	}
 
-	public function setWatermarkHeight(int $watermarkHeight): self
+	public function setWatermarkHeight(int|string $watermarkHeight): self
 	{
 		$this->options[self::WATERMARK_HEIGHT] = $watermarkHeight;
 		return $this;
