@@ -613,7 +613,7 @@ class Options implements \Stringable
 	/**
 	 * Set watermark x offset
 	 */
-	public function setWatermarkXOffset(int $watermarkXOffset): self
+	public function setWatermarkXOffset(int|string $watermarkXOffset): self
 	{
 		$this->options[self::WATERMARK_X_OFFSET] = $watermarkXOffset;
 		return $this;
@@ -622,9 +622,9 @@ class Options implements \Stringable
 	/**
 	 * Get watermark x offset
 	 */
-	public function getWatermarkXOffset(): null|int
+	public function getWatermarkXOffset(): null|int|string
 	{
-		/** @var null|int $value */
+		/** @var null|int|string $value */
 		$value = $this->options[self::WATERMARK_X_OFFSET] ?? null;
 
 		return $value;
@@ -633,7 +633,7 @@ class Options implements \Stringable
 	/**
 	 * Set watermark y offset
 	 */
-	public function setWatermarkYOffset(int $watermarkYOffset): self
+	public function setWatermarkYOffset(int|string $watermarkYOffset): self
 	{
 		$this->options[self::WATERMARK_Y_OFFSET] = $watermarkYOffset;
 		return $this;
@@ -642,15 +642,15 @@ class Options implements \Stringable
 	/**
 	 * Get watermark y offset
 	 */
-	public function getWatermarkYOffset(): null|int
+	public function getWatermarkYOffset(): null|int|string
 	{
-		/** @var null|int $value */
+		/** @var null|int|string $value */
 		$value = $this->options[self::WATERMARK_Y_OFFSET] ?? null;
 
 		return $value;
 	}
 
-	public function setWatermarkPadding(int $watermarkPadding): self
+	public function setWatermarkPadding(int|string $watermarkPadding): self
 	{
 		$this->options[self::WATERMARK_PADDING] = $watermarkPadding;
 		return $this;
@@ -659,9 +659,9 @@ class Options implements \Stringable
 	/**
 	 * Get watermark padding
 	 */
-	public function getWatermarkPadding(): null|int
+	public function getWatermarkPadding(): null|int|string
 	{
-		/** @var null|int $value */
+		/** @var null|int|string $value */
 		$value = $this->options[self::WATERMARK_PADDING] ?? null;
 
 		return $value;
