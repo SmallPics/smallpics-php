@@ -26,34 +26,69 @@ class UrlBuilder
 		$options ??= new Options();
 		$optionsString = (string) $options;
 
-		$unsignedUrl = "{$this->host}/{$sourceUrl}?{$optionsString}";
+		if ($optionsString !== '') {
+			$optionsString = "?{$optionsString}";
+		}
+
+		$unsignedUrl = $this->normalizeUrl("{$this->host}/{$sourceUrl}{$optionsString}");
 
 		if ($this->secret === null) {
 			return $unsignedUrl;
 		}
 
-		return $unsignedUrl . '&signature=' . $this->generateSignature($unsignedUrl);
+		$signature = $this->generateSignature($unsignedUrl);
+
+		$signature = $optionsString === '' ? "?signature={$signature}" : "&signature={$signature}";
+
+		return "{$unsignedUrl}{$signature}";
+	}
+
+	protected function normalizeUrl(string $url): string
+	{
+		/** @var array{scheme:string,host:string,path:null|string,query:null|string} $parts */
+		$parts = parse_url($url);
+		$path = $parts['path'] ?? '';
+		$query = $parts['query'] ?? '';
+		$params = [];
+		parse_str($query, $params);
+
+		unset($params['signature']);
+
+		$flattened = [];
+		foreach ($params as $key => $value) {
+			if (is_int($key) && is_array($value)) {
+				$lastKey = array_key_last($value);
+				$flattened[$lastKey] = $value[$lastKey];
+			} else {
+				$flattened[$key] = $value;
+			}
+		}
+
+		$params = array_change_key_case($flattened, CASE_LOWER);
+		ksort($params);
+
+		$query = '';
+		if ($params !== []) {
+			$query = '?' . urldecode(http_build_query($params));
+		}
+
+		return "{$parts['scheme']}://{$parts['host']}{$path}$query";
 	}
 
 	/**
-	 * Generate signature for the given path
+	 * Generate a signature for the given path
 	 */
 	protected function generateSignature(string $path): string
 	{
 		$path = urldecode($path);
 
-		// We always want to generate a signature for a path that exludes the signature param and value
-		$path = preg_replace('/&?signature=[^&]*/', '', $path);
+		// At this point secret would be set.
+		/** @var string $secret */
+		$secret = $this->secret;
 
-		if ($path === null || $this->secret === null) {
-			return '';
-		}
-
-		$signature = hash_hmac('sha256', $path, $this->secret, true);
+		$signature = hash_hmac('sha256', $path, $secret, true);
 		$signature = base64_encode($signature);
 		// Make it neat
-		$signature = str_replace(['+', '/', '='], '', $signature);
-
-		return $signature;
+		return str_replace(['+', '/', '='], '', $signature);
 	}
 }
