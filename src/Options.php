@@ -14,7 +14,7 @@ class Options implements \Stringable
 	/**
 	 * @var string
 	 */
-	public const ORIGIN = 'origin';
+	public const ORIGIN = 'o';
 
 	/**
 	 * @var string

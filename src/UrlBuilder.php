@@ -88,6 +88,7 @@ class UrlBuilder
 
 		$signature = hash_hmac('sha256', $path, $secret, true);
 		$signature = base64_encode($signature);
+
 		// Make it neat
 		return str_replace(['+', '/', '='], '', $signature);
 	}
