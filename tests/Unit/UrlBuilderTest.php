@@ -236,7 +236,7 @@ test('can generate signed URLs', function (): void {
 	$builder = new UrlBuilder('https://images.example.com', $secret);
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?h=400&w=300&signature=zUweQjgXXIPf89xQ6ZwWKiR6oaKLrb8uY3NZWQz7xCY');
+	expect($url)->toBe('https://images.example.com/images/image.jpg?h=400&w=300&s=zUweQjgXXIPf89xQ6ZwWKiR6oaKLrb8uY3NZWQz7xCY');
 });
 
 test('can generate complex signed URLs', function (): void {
@@ -251,7 +251,7 @@ test('can generate complex signed URLs', function (): void {
 	$builder = new UrlBuilder('https://images.example.com', $secret);
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
-	expect($url)->toBe('https://images.example.com/images/image.jpg?border=5,ff0000,overlay&fm=png&q=80&signature=aENMpKwCgmLFxdo1KipXNVWsNvmOMbgxa6pGRI');
+	expect($url)->toBe('https://images.example.com/images/image.jpg?border=5,ff0000,overlay&fm=png&q=80&s=aENMpKwCgmLFxdo1KipXNVWsNvmOMbgxa6pGRI');
 });
 
 test('generates signature with unicode characters', function (): void {
@@ -268,5 +268,5 @@ test('generates signature with unicode characters', function (): void {
 	$builder = new UrlBuilder('https://images.example.com', $secret);
 	$url = $builder->buildUrl('images/unicode-%E9%BD%90%E8%89%B2-0.png', $options);
 
-	expect($url)->toBe('https://images.example.com/images/unicode-%E9%BD%90%E8%89%B2-0.png?fit=contain&fm=avif&h=600&origin=main&q=90&w=600&signature=CWhpOSCFIJdXSZCqI0Nq7JhXW9RKQs42YPnAcNz0');
+	expect($url)->toBe('https://images.example.com/images/unicode-%E9%BD%90%E8%89%B2-0.png?fit=contain&fm=avif&h=600&origin=main&q=90&w=600&s=CWhpOSCFIJdXSZCqI0Nq7JhXW9RKQs42YPnAcNz0');
 });

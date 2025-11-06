@@ -38,7 +38,7 @@ class UrlBuilder
 
 		$signature = $this->generateSignature($unsignedUrl);
 
-		$signature = $optionsString === '' ? "?signature={$signature}" : "&signature={$signature}";
+		$signature = $optionsString === '' ? "?s={$signature}" : "&s={$signature}";
 
 		return "{$unsignedUrl}{$signature}";
 	}
