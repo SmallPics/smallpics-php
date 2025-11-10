@@ -14,11 +14,6 @@ class Options implements \Stringable
 	/**
 	 * @var string
 	 */
-	public const ORIGIN = 'o';
-
-	/**
-	 * @var string
-	 */
 	public const ORIENTATION = 'or';
 
 	/**
@@ -210,26 +205,6 @@ class Options implements \Stringable
 		}
 
 		return implode($this->optionSeparator, $options);
-	}
-
-	/**
-	 * Set origin
-	 */
-	public function setOrigin(string $origin): self
-	{
-		$this->options[self::ORIGIN] = $origin;
-		return $this;
-	}
-
-	/**
-	 * Get origin
-	 */
-	public function getOrigin(): null|string
-	{
-		/** @var null|string $value */
-		$value = $this->options[self::ORIGIN] ?? null;
-
-		return $value;
 	}
 
 	/**

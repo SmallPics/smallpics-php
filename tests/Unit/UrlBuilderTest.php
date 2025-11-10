@@ -256,7 +256,6 @@ test('can generate complex signed URLs', function (): void {
 
 test('generates signature with unicode characters', function (): void {
 	$options = createOptions()
-		->setOrigin('main')
 		->setFormat('avif')
 		->setQuality(90)
 		->setWidth(600)
@@ -268,5 +267,5 @@ test('generates signature with unicode characters', function (): void {
 	$builder = new UrlBuilder('https://images.example.com', $secret);
 	$url = $builder->buildUrl('images/unicode-%E9%BD%90%E8%89%B2-0.png', $options);
 
-	expect($url)->toBe('https://images.example.com/images/unicode-%E9%BD%90%E8%89%B2-0.png?fit=contain&fm=avif&h=600&o=main&q=90&w=600&s=T708sCDhGXdolPJellqE6HR4K510i0XY5pXq4KZtVc');
+	expect($url)->toBe('https://images.example.com/images/unicode-%E9%BD%90%E8%89%B2-0.png?fit=contain&fm=avif&h=600&q=90&w=600&s=QdTpLQU32MvZqPpWTHupc6foZ3EHeVCLf2R1y6RW3U');
 });
