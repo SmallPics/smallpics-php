@@ -1,8 +1,8 @@
 {
 	"name": "smallpics/smallpics-php",
-	"description": "A PHP client library for generating URLs with SmallPics",
+	"description": "A PHP client library for generating URLs with Small Pics",
 	"type": "library",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"keywords": [
 		"smallpics",
 		"php",
