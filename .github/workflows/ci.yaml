@@ -3,8 +3,6 @@ name: CI
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
   pull_request:
 
 jobs:
@@ -12,13 +10,13 @@ jobs:
     name: ECS Check
     runs-on: ubuntu-latest
     env:
-      DEFAULT_COMPOSER_FLAGS: "--no-interaction --no-ansi --no-progress"
+      DEFAULT_COMPOSER_FLAGS: " --prefer-dist --no-interaction --no-ansi --no-progress"
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
-      - run: composer install --prefer-dist --no-progress
+          php-version: 8.4
+      - run: composer install --prefer-dist --no-progress --ignore-platform-reqs
       - name: Run ecs check
         run: |
           vendor/bin/ecs --memory-limit=1G --no-progress-bar
@@ -26,27 +24,32 @@ jobs:
     name: Rector dry-run
     runs-on: ubuntu-latest
     env:
-      DEFAULT_COMPOSER_FLAGS: "--no-interaction --no-ansi --no-progress"
+      DEFAULT_COMPOSER_FLAGS: " --prefer-dist --no-interaction --no-ansi --no-progress"
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
-      - run: composer install --prefer-dist --no-progress
+          php-version: 8.4
+      - run: composer install
       - name: Run rector --dry-run
         run: |
           vendor/bin/rector --memory-limit=1G --no-progress-bar --dry-run
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [8.2, 8.3, 8.4]
     env:
-      DEFAULT_COMPOSER_FLAGS: "--no-interaction --no-ansi --no-progress"
+      DEFAULT_COMPOSER_FLAGS: " --prefer-dist --no-interaction --no-ansi --no-progress --ignore-platform-reqs"
+      COMPOSER_IGNORE_PLATFORM_REQS: 1
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
-      - run: composer install --prefer-dist --no-progress
+          php-version: ${{ matrix.php }}
+      - run: composer install
       - name: Run phpstan
         run: |
           vendor/bin/phpstan --memory-limit=1G
@@ -59,7 +62,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: 8.4
       - run: composer install --prefer-dist --no-progress
       - name: Run pest
         run: |
