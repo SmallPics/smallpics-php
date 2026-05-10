@@ -61,6 +61,28 @@ test('boolean values are converted to 1 and 0', function (): void {
 	expect($options->toString())->toBe('interlace=0');
 });
 
+test('can set ad hoc params', function (): void {
+	$options = createOptions();
+	$options->setWidth(100)
+		->setParam('my-other-param', 'whatever')
+		->setParam('enabled', true);
+
+	expect($options->toString())->toBe('w=100&my-other-param=whatever&enabled=1');
+	expect($options->getParam('my-other-param'))->toBe('whatever');
+});
+
+test('can set ad hoc params with constructor array', function (): void {
+	$options = createOptions([
+		'width' => 100,
+		'params' => [
+			'my-other-param' => 'whatever',
+			'version' => 2,
+		],
+	]);
+
+	expect($options->toString())->toBe('w=100&my-other-param=whatever&version=2');
+});
+
 test('watermark methods work correctly', function (): void {
 	$options = createOptions();
 

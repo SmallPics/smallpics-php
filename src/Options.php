@@ -178,6 +178,11 @@ class Options implements \Stringable
 			if (method_exists($this, $method)) {
 				// We want to make sure that we can set the individual arguments from an associative array or a regular array.
 				if (is_array($value)) {
+					if ($method === 'setParams') {
+						$this->setParams($value);
+						continue;
+					}
+
 					$this->{$method}(...$value);
 				} else {
 					$this->{$method}($value);
@@ -800,6 +805,41 @@ class Options implements \Stringable
 	{
 		$value = $this->options[self::INTERLACE] ?? null;
 		return $value === null ? null : $value === '1';
+	}
+
+	/**
+	 * Set an ad hoc query parameter.
+	 *
+	 * @param non-empty-string $key
+	 */
+	public function setParam(string $key, int|float|string|bool $value): self
+	{
+		$this->options[$key] = is_bool($value) ? ($value ? '1' : '0') : $value;
+		return $this;
+	}
+
+	/**
+	 * Set multiple ad hoc query parameters.
+	 *
+	 * @param array<non-empty-string, int|float|string|bool> $params
+	 */
+	public function setParams(array $params): self
+	{
+		foreach ($params as $key => $value) {
+			$this->setParam($key, $value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Get an ad hoc or built-in query parameter by its serialized key.
+	 *
+	 * @param non-empty-string $key
+	 */
+	public function getParam(string $key): null|int|float|string
+	{
+		return $this->options[$key] ?? null;
 	}
 
 	/**

@@ -162,6 +162,17 @@ test('can build URL with device pixel ratio', function (): void {
 	expect($url)->toBe('https://images.example.com/images/image.jpg?dpr=2');
 });
 
+test('can build URL with ad hoc params', function (): void {
+	$options = createOptions();
+	$options->setWidth(100)
+		->setParam('my-other-param', 'foobar');
+
+	$builder = new UrlBuilder('https://images.example.com');
+	$url = $builder->buildUrl('images/image.jpg', $options);
+
+	expect($url)->toBe('https://images.example.com/images/image.jpg?my-other-param=foobar&w=100');
+});
+
 test('can build URL with gamma adjustment', function (): void {
 	$options = createOptions();
 	$options->setGamma(1.5);
@@ -237,6 +248,19 @@ test('can generate signed URLs', function (): void {
 	$url = $builder->buildUrl('images/image.jpg', $options);
 
 	expect($url)->toBe('https://images.example.com/images/image.jpg?h=400&w=300&s=zUweQjgXXIPf89xQ6ZwWKiR6oaKLrb8uY3NZWQz7xCY');
+});
+
+test('can generate signed URLs with ad hoc params', function (): void {
+	$options = createOptions();
+	$options->setWidth(100)
+		->setParam('my-other-param', 'whatever');
+
+	$secret = 'my-secret-value';
+
+	$builder = new UrlBuilder('https://images.example.com', $secret);
+	$url = $builder->buildUrl('images/image.jpg', $options);
+
+	expect($url)->toBe('https://images.example.com/images/image.jpg?my-other-param=whatever&w=100&s=XZus9dOfF8Pw0Y6A0Nqwr9mOmYZaDRHCgwKkx6iYFg');
 });
 
 test('can generate complex signed URLs', function (): void {
