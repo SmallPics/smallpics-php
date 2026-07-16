@@ -843,6 +843,44 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * @return string[]
+	 */
+	public static function allOptions(): array
+	{
+		return [
+			self::ORIENTATION => 'orientation',
+			self::FLIP => 'flip',
+			self::CROP => 'crop',
+			self::WIDTH => 'width',
+			self::HEIGHT => 'height',
+			self::FIT => 'fit',
+			self::DEVICE_PIXEL_RATIO => 'devicePixelRatio',
+			self::BRIGHTNESS => 'brightness',
+			self::CONTRAST => 'contrast',
+			self::GAMMA => 'gamma',
+			self::SHARPEN => 'sharpen',
+			self::BLUR => 'blur',
+			self::PIXELATE => 'pixelate',
+			self::FILTER => 'filter',
+			self::WATERMARK_PATH => 'watermarkPath',
+			self::WATERMARK_ORIGIN => 'watermarkOrigin',
+			self::WATERMARK_WIDTH => 'watermarkWidth',
+			self::WATERMARK_HEIGHT => 'watermarkHeight',
+			self::WATERMARK_FIT => 'watermarkFit',
+			self::WATERMARK_X_OFFSET => 'watermarkXOffset',
+			self::WATERMARK_Y_OFFSET => 'watermarkYOffset',
+			self::WATERMARK_PADDING => 'watermarkPadding',
+			self::WATERMARK_POSITION => 'watermarkPosition',
+			self::WATERMARK_ALPHA => 'watermarkAlpha',
+			self::BACKGROUND => 'background',
+			self::BORDER => 'border',
+			self::QUALITY => 'quality',
+			self::FORMAT => 'format',
+			self::INTERLACE => 'interlaced',
+		];
+	}
+
+	/**
 	 * @param non-empty-string $key
 	 */
 	private function setBaseFit(string $key, string|Fit $fit, null|string|CropPosition $cropPosition = null, ?int $focalPointX = null, ?int $focalPointY = null, ?int $zoom = null): self
