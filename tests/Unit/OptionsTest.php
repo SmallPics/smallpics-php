@@ -61,6 +61,30 @@ test('boolean values are converted to 1 and 0', function (): void {
 	expect($options->toString())->toBe('interlace=0');
 });
 
+test('can set aspect ratio', function (): void {
+	$options = createOptions();
+	$options->setAspectRatio(19, 6);
+
+	expect($options->toString())->toBe('ar=3.1667');
+	expect($options->getAspectRatio())->toBe(3.1667);
+});
+
+test('can set aspect ratio with direct ratio', function (): void {
+	$options = createOptions();
+	$options->setAspectRatio(1.7778);
+
+	expect($options->toString())->toBe('ar=1.7778');
+	expect($options->getAspectRatio())->toBe(1.7778);
+});
+
+test('can set aspect ratio with constructor array', function (): void {
+	$options = createOptions([
+		'aspectRatio' => [19, 6],
+	]);
+
+	expect($options->toString())->toBe('ar=3.1667');
+});
+
 test('can set ad hoc params', function (): void {
 	$options = createOptions();
 	$options->setWidth(100)

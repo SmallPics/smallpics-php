@@ -39,6 +39,11 @@ class Options implements \Stringable
 	/**
 	 * @var string
 	 */
+	public const ASPECT_RATIO = 'ar';
+
+	/**
+	 * @var string
+	 */
 	public const FIT = 'fit';
 
 	/**
@@ -335,6 +340,30 @@ class Options implements \Stringable
 		$value = $this->options[self::HEIGHT] ?? null;
 
 		return $value;
+	}
+
+	/**
+	 * Set aspect ratio
+	 */
+	public function setAspectRatio(int|float $dividend, null|int|float $divisor = null): self
+	{
+		$this->options[self::ASPECT_RATIO] = $divisor === null ? $dividend : round($dividend / $divisor, 4);
+		return $this;
+	}
+
+	/**
+	 * Get aspect ratio
+	 */
+	public function getAspectRatio(): null|float
+	{
+		/** @var null|int|float|string $value */
+		$value = $this->options[self::ASPECT_RATIO] ?? null;
+
+		if ($value === null) {
+			return null;
+		}
+
+		return (float) $value;
 	}
 
 	/**
@@ -853,6 +882,7 @@ class Options implements \Stringable
 			self::CROP => 'crop',
 			self::WIDTH => 'width',
 			self::HEIGHT => 'height',
+			self::ASPECT_RATIO => 'aspectRatio',
 			self::FIT => 'fit',
 			self::DEVICE_PIXEL_RATIO => 'devicePixelRatio',
 			self::BRIGHTNESS => 'brightness',

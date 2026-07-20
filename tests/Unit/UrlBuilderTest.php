@@ -141,6 +141,16 @@ test('can build URL with fit options', function (): void {
 	expect($url)->toBe('https://images.example.com/images/image.jpg?fit=contain');
 });
 
+test('can build URL with aspect ratio', function (): void {
+	$options = createOptions();
+	$options->setAspectRatio(19, 6);
+
+	$builder = new UrlBuilder('https://images.example.com');
+	$url = $builder->buildUrl('images/image.jpg', $options);
+
+	expect($url)->toBe('https://images.example.com/images/image.jpg?ar=3.1667');
+});
+
 test('can build URL with orientation and flip options', function (): void {
 	$options = createOptions();
 	$options->setOrientation(90)
