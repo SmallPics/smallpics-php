@@ -11,7 +11,9 @@
 |
 */
 
-expect()->extend('toBeOptions', fn () => $this->toBeInstanceOf(\smallpics\smallpics\Options::class));
+use smallpics\smallpics\Options;
+
+expect()->extend('toBeOptions', fn () => $this->toBeInstanceOf(Options::class));
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +26,7 @@ expect()->extend('toBeOptions', fn () => $this->toBeInstanceOf(\smallpics\smallp
 |
 */
 
-function createOptions(array $options = []): \smallpics\smallpics\Options
+function createOptions(array $options = []): Options
 {
-	return new \smallpics\smallpics\Options($options);
+	return new Options($options);
 }

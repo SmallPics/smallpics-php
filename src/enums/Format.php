@@ -10,4 +10,5 @@ enum Format: string
 	case GIF = 'gif';
 	case WEBP = 'webp';
 	case AVIF = 'avif';
+	case JXL = 'jxl';
 }

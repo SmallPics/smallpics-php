@@ -800,7 +800,9 @@ class Options implements \Stringable
 	public function setFormat(string|Format $format): self
 	{
 		if (is_string($format)) {
-			$format = Format::from($format);
+			$format = strtolower($format);
+			// Small Pics transforms support both "jpg" and "jpeg" as possible values for "jpg".
+			$format = $format === 'jpeg' ? Format::JPG : Format::from($format);
 		}
 
 		$this->options[self::FORMAT] = $format->value;

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 - 2026-08-14
+
+- Add `Format::JXL` variant
+- Coerce `"jpeg"` to `Format::JPG`
+
 ## 1.1.0 - 2026-07-20
 
 - Add support for `ar` param to set the desired aspect ratio of an image
