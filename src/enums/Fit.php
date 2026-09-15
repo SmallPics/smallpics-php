@@ -43,6 +43,7 @@ enum Fit: string
 	 * Resizes the image to fill the width and height boundaries and crops any excess image
 	 * data. The resulting image will match the width and height constraints without distorting the
 	 * image. See {@see CropPosition} for more.
+	 * @deprecated Use CROP instead.
 	 */
 	case COVER = 'cover';
 

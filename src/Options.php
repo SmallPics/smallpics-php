@@ -26,6 +26,18 @@ class Options implements \Stringable
 	 */
 	public const CROP = 'crop';
 
+	public const FOCAL_POINT = 'fp';
+
+	public const ZOOM = 'zoom';
+
+	public const ZOOM_PADDING = 'zoompad';
+
+	public const FACE = 'face';
+
+	public const DEBUG = 'debug';
+
+	public const PASSTHROUGH = 'passthrough';
+
 	/**
 	 * @var string
 	 */
@@ -112,11 +124,13 @@ class Options implements \Stringable
 	public const WATERMARK_FIT = 'markfit';
 
 	/**
+	 * @deprecated Use WATERMARK_PADDING instead.
 	 * @var string
 	 */
 	public const WATERMARK_X_OFFSET = 'markx';
 
 	/**
+	 * @deprecated Use WATERMARK_PADDING instead.
 	 * @var string
 	 */
 	public const WATERMARK_Y_OFFSET = 'marky';
@@ -174,12 +188,24 @@ class Options implements \Stringable
 	protected string $optionSeparator = '&';
 
 	/**
+	 * @var array<string, true>
+	 */
+	private array $legacyFitParams = [];
+
+	/**
 	 * @param array<string, mixed> $options
 	 */
 	public function __construct(array $options = [])
 	{
 		foreach ($options as $option => $value) {
+			$option = self::allOptions()[$option] ?? $option;
 			$method = 'set' . $this->toPascalCase($option);
+			if ($method === 'setBorder' && is_string($value)) {
+				// Catch any usages of deprecated "pad"
+				$value = explode(',', $value);
+				$value[2] ??= BorderMethod::OVERLAY;
+			}
+
 			if (method_exists($this, $method)) {
 				// We want to make sure that we can set the individual arguments from an associative array or a regular array.
 				if (is_array($value)) {
@@ -263,6 +289,8 @@ class Options implements \Stringable
 
 	/**
 	 * Set fit
+	 *
+	 * Extra positioning arguments are deprecated; use setCropPosition(), setFocalPoint() and setZoom().
 	 */
 	public function setFit(string|Fit $fit, null|string|CropPosition $cropPosition = null, ?int $focalPointX = null, ?int $focalPointY = null, ?int $zoom = null): self
 	{
@@ -279,11 +307,118 @@ class Options implements \Stringable
 		return $this->getBaseFit(self::FIT);
 	}
 
+	public function setCropPosition(string|CropPosition $position): self
+	{
+		unset($this->legacyFitParams[self::CROP]);
+		$value = $position instanceof CropPosition ? $position->value : $position;
+		$this->options[self::CROP] = (string) preg_replace('/^(?:cover|crop)-/', '', $value);
+		return $this;
+	}
+
+	public function getCropPosition(): ?string
+	{
+		$value = $this->options[self::CROP] ?? null;
+		return is_string($value) && count(explode(',', $value)) !== 4 ? $value : null;
+	}
+
+	public function setFocalPoint(int|float|string $value, int|float|string|null $y = null): self
+	{
+		unset($this->legacyFitParams[self::FOCAL_POINT]);
+		$this->options[self::FOCAL_POINT] = $y === null ? $value : $value . ':' . $y;
+		return $this;
+	}
+
+	public function getFocalPoint(): null|int|float|string
+	{
+		/** @var null|int|float|string $value */
+		$value = $this->options[self::FOCAL_POINT] ?? null;
+		return $value;
+	}
+
+	public function setZoom(int|float|string $value, int|float|null $fallback = null): self
+	{
+		unset($this->legacyFitParams[self::ZOOM]);
+		$this->options[self::ZOOM] = $fallback === null ? $value : $value . ',' . $fallback;
+		return $this;
+	}
+
+	public function getZoom(): null|int|float|string
+	{
+		/** @var null|int|float|string $value */
+		$value = $this->options[self::ZOOM] ?? null;
+		return $value;
+	}
+
+	public function setZoomPadding(int|float|string $value, int|float|string|null $y = null): self
+	{
+		$this->options[self::ZOOM_PADDING] = $y === null ? $value : $value . ':' . $y;
+		return $this;
+	}
+
+	public function getZoomPadding(): null|int|float|string
+	{
+		/** @var null|int|float|string $value */
+		$value = $this->options[self::ZOOM_PADDING] ?? null;
+		return $value;
+	}
+
+	public function setFace(int $value): self
+	{
+		$this->options[self::FACE] = $value;
+		return $this;
+	}
+
+	public function getFace(): null|int
+	{
+		/** @var null|int $value */
+		$value = $this->options[self::FACE] ?? null;
+		return $value;
+	}
+
+	/**
+	 * Return SVG source bytes unchanged. False removes the presence flag.
+	 */
+	public function setPassthrough(bool $passthrough = true): self
+	{
+		if ($passthrough) {
+			$this->options[self::PASSTHROUGH] = '1';
+		} else {
+			unset($this->options[self::PASSTHROUGH]);
+		}
+
+		return $this;
+	}
+
+	public function getPassthrough(): bool
+	{
+		return isset($this->options[self::PASSTHROUGH]);
+	}
+
+	public function setDebug(bool $debug): self
+	{
+		return $this->setParam(self::DEBUG, $debug);
+	}
+
+	public function getDebug(): ?bool
+	{
+		$value = $this->getParam(self::DEBUG);
+		return $value === null ? null : (string) $value === '1';
+	}
+
 	/**
 	 * Set crop
 	 */
-	public function setCrop(int $width, int $height, int $x, int $y): self
+	public function setCrop(int|string|CropPosition $width, ?int $height = null, ?int $x = null, ?int $y = null): self
 	{
+		unset($this->legacyFitParams[self::CROP]);
+		if ($height === null && $x === null && $y === null && ($width instanceof CropPosition || is_string($width))) {
+			return $this->setCropPosition($width);
+		}
+
+		if (! is_int($width) || $height === null || $x === null || $y === null) {
+			throw new \InvalidArgumentException('Rectangle crops require width, height, x and y integers.');
+		}
+
 		$this->options[self::CROP] = implode(',', [$width, $height, $x, $y]);
 		return $this;
 	}
@@ -291,21 +426,21 @@ class Options implements \Stringable
 	/**
 	 * Get crop
 	 *
-	 * @return null|array<array-key, int>
+	 * @return null|string|array<array-key, int>
 	 */
-	public function getCrop(): null|array
+	public function getCrop(): null|string|array
 	{
 		/** @var null|string $value */
 		$value = $this->options[self::CROP] ?? null;
 
-		if ($value === null) {
-			return null;
+		if ($value === null || count(explode(',', $value)) !== 4) {
+			return $value;
 		}
 
 		return array_map('intval', explode(',', $value));
 	}
 
-	public function setWidth(int $width): self
+	public function setWidth(int|float|string $width): self
 	{
 		$this->options[self::WIDTH] = $width;
 		return $this;
@@ -314,18 +449,15 @@ class Options implements \Stringable
 	/**
 	 * Get width
 	 */
-	public function getWidth(): null|int
+	public function getWidth(): null|int|float|string
 	{
-		/** @var null|int $value */
-		$value = $this->options[self::WIDTH] ?? null;
-
-		return $value;
+		return $this->options[self::WIDTH] ?? null;
 	}
 
 	/**
 	 * Set height
 	 */
-	public function setHeight(int $height): self
+	public function setHeight(int|float|string $height): self
 	{
 		$this->options[self::HEIGHT] = $height;
 		return $this;
@@ -334,20 +466,17 @@ class Options implements \Stringable
 	/**
 	 * Get height
 	 */
-	public function getHeight(): null|int
+	public function getHeight(): null|int|float|string
 	{
-		/** @var null|int $value */
-		$value = $this->options[self::HEIGHT] ?? null;
-
-		return $value;
+		return $this->options[self::HEIGHT] ?? null;
 	}
 
 	/**
 	 * Set aspect ratio
 	 */
-	public function setAspectRatio(int|float $dividend, null|int|float $divisor = null): self
+	public function setAspectRatio(int|float|string $dividend, null|int|float $divisor = null): self
 	{
-		$this->options[self::ASPECT_RATIO] = $divisor === null ? $dividend : round($dividend / $divisor, 4);
+		$this->options[self::ASPECT_RATIO] = $divisor === null ? $dividend : round((float) $dividend / $divisor, 4);
 		return $this;
 	}
 
@@ -363,13 +492,18 @@ class Options implements \Stringable
 			return null;
 		}
 
+		if (is_string($value) && str_contains($value, ':')) {
+			[$width, $height] = explode(':', $value, 2);
+			return round((float) $width / (float) $height, 4);
+		}
+
 		return (float) $value;
 	}
 
 	/**
 	 * Set device pixel ratio
 	 */
-	public function setDevicePixelRatio(int $devicePixelRatio = 1): self
+	public function setDevicePixelRatio(int|float $devicePixelRatio = 1): self
 	{
 		$this->options[self::DEVICE_PIXEL_RATIO] = $devicePixelRatio;
 		return $this;
@@ -378,12 +512,11 @@ class Options implements \Stringable
 	/**
 	 * Get device pixel ratio
 	 */
-	public function getDevicePixelRatio(): null|int
+	public function getDevicePixelRatio(): null|int|float
 	{
-		/** @var null|int $value */
 		$value = $this->options[self::DEVICE_PIXEL_RATIO] ?? null;
 
-		return $value;
+		return is_numeric($value) ? $value + 0 : null;
 	}
 
 	/**
@@ -512,7 +645,7 @@ class Options implements \Stringable
 	public function setFilter(string|Filter $filter): self
 	{
 		if (is_string($filter)) {
-			$filter = Filter::from($filter);
+			$filter = Filter::from($filter === 'greyscale' ? 'grayscale' : $filter);
 		}
 
 		$this->options[self::FILTER] = $filter->value;
@@ -567,7 +700,7 @@ class Options implements \Stringable
 		return $value;
 	}
 
-	public function setWatermarkWidth(int|string $watermarkWidth): self
+	public function setWatermarkWidth(int|float|string $watermarkWidth): self
 	{
 		$this->options[self::WATERMARK_WIDTH] = $watermarkWidth;
 		return $this;
@@ -576,15 +709,15 @@ class Options implements \Stringable
 	/**
 	 * Get watermark width
 	 */
-	public function getWatermarkWidth(): null|int|string
+	public function getWatermarkWidth(): null|int|float|string
 	{
-		/** @var null|int|string $value */
+		/** @var null|int|float|string $value */
 		$value = $this->options[self::WATERMARK_WIDTH] ?? null;
 
 		return $value;
 	}
 
-	public function setWatermarkHeight(int|string $watermarkHeight): self
+	public function setWatermarkHeight(int|float|string $watermarkHeight): self
 	{
 		$this->options[self::WATERMARK_HEIGHT] = $watermarkHeight;
 		return $this;
@@ -593,16 +726,13 @@ class Options implements \Stringable
 	/**
 	 * Get watermark height
 	 */
-	public function getWatermarkHeight(): null|int
+	public function getWatermarkHeight(): null|int|float|string
 	{
-		/** @var null|int $value */
-		$value = $this->options[self::WATERMARK_HEIGHT] ?? null;
-
-		return $value;
+		return $this->options[self::WATERMARK_HEIGHT] ?? null;
 	}
 
 	/**
-	 * Set watermark fit
+	 * Set watermark fit. Extra positioning arguments are deprecated; use setCropPosition(), setFocalPoint() and setZoom().
 	 */
 	public function setWatermarkFit(string|Fit $fit, null|string|CropPosition $cropPosition = null, ?int $focalPointX = null, ?int $focalPointY = null, ?int $zoom = null): self
 	{
@@ -620,46 +750,46 @@ class Options implements \Stringable
 	}
 
 	/**
-	 * Set watermark x offset
+	 * @deprecated Use setWatermarkPadding() instead.
 	 */
-	public function setWatermarkXOffset(int|string $watermarkXOffset): self
+	public function setWatermarkXOffset(int|float|string $watermarkXOffset): self
 	{
 		$this->options[self::WATERMARK_X_OFFSET] = $watermarkXOffset;
 		return $this;
 	}
 
 	/**
-	 * Get watermark x offset
+	 * @deprecated Use getWatermarkPadding() instead.
 	 */
-	public function getWatermarkXOffset(): null|int|string
+	public function getWatermarkXOffset(): null|int|float|string
 	{
-		/** @var null|int|string $value */
+		/** @var null|int|float|string $value */
 		$value = $this->options[self::WATERMARK_X_OFFSET] ?? null;
 
 		return $value;
 	}
 
 	/**
-	 * Set watermark y offset
+	 * @deprecated Use setWatermarkPadding() instead.
 	 */
-	public function setWatermarkYOffset(int|string $watermarkYOffset): self
+	public function setWatermarkYOffset(int|float|string $watermarkYOffset): self
 	{
 		$this->options[self::WATERMARK_Y_OFFSET] = $watermarkYOffset;
 		return $this;
 	}
 
 	/**
-	 * Get watermark y offset
+	 * @deprecated Use getWatermarkPadding() instead.
 	 */
-	public function getWatermarkYOffset(): null|int|string
+	public function getWatermarkYOffset(): null|int|float|string
 	{
-		/** @var null|int|string $value */
+		/** @var null|int|float|string $value */
 		$value = $this->options[self::WATERMARK_Y_OFFSET] ?? null;
 
 		return $value;
 	}
 
-	public function setWatermarkPadding(int|string $watermarkPadding): self
+	public function setWatermarkPadding(int|float|string $watermarkPadding): self
 	{
 		$this->options[self::WATERMARK_PADDING] = $watermarkPadding;
 		return $this;
@@ -668,9 +798,9 @@ class Options implements \Stringable
 	/**
 	 * Get watermark padding
 	 */
-	public function getWatermarkPadding(): null|int|string
+	public function getWatermarkPadding(): null|int|float|string
 	{
-		/** @var null|int|string $value */
+		/** @var null|int|float|string $value */
 		$value = $this->options[self::WATERMARK_PADDING] ?? null;
 
 		return $value;
@@ -679,25 +809,19 @@ class Options implements \Stringable
 	/**
 	 * Set watermark position
 	 */
-	public function setWatermarkPosition(string|WatermarkPosition $watermarkPosition): self
+	public function setWatermarkPosition(int|float|string|WatermarkPosition $watermarkPosition): self
 	{
-		if (is_string($watermarkPosition)) {
-			$watermarkPosition = WatermarkPosition::from($watermarkPosition);
-		}
-
-		$this->options[self::WATERMARK_POSITION] = $watermarkPosition->value;
+		$this->options[self::WATERMARK_POSITION] = $watermarkPosition instanceof WatermarkPosition ? $watermarkPosition->value : $watermarkPosition;
 		return $this;
 	}
 
 	/**
 	 * Get watermark position
 	 */
-	public function getWatermarkPosition(): null|WatermarkPosition
+	public function getWatermarkPosition(): null|int|float|string|WatermarkPosition
 	{
-		/** @var null|string $value */
 		$value = $this->options[self::WATERMARK_POSITION] ?? null;
-
-		return $value ? WatermarkPosition::from($value) : null;
+		return $value === null ? null : (WatermarkPosition::tryFrom((string) $value) ?? $value);
 	}
 
 	/**
@@ -743,15 +867,15 @@ class Options implements \Stringable
 	/**
 	 * Set border
 	 *
-	 * To use a relative dimension, simply provide a percentage as a number (between 0 and 100), followed by a w (width) or h (height). For example, 5w represents 5% of the width of the main image.
+	 * To use a relative dimension, provide a percentage as a number (between 0 and 100), followed by a w (width) or h (height). For example, 5w represents 5% of the width of the main image.
 	 */
-	public function setBorder(int|string $width, string $color, string|BorderMethod $borderMethod): self
+	public function setBorder(int|float|string $width, string $color, string|BorderMethod $borderMethod): self
 	{
 		if (is_string($borderMethod)) {
 			$borderMethod = BorderMethod::from($borderMethod);
 		}
 
-		$this->options[self::BORDER] = implode(',', [$width, $color, $borderMethod->value]);
+		$this->options[self::BORDER] = implode(',', [$width, $color, $borderMethod === BorderMethod::PAD ? BorderMethod::EXPAND->value : $borderMethod->value]);
 		return $this;
 	}
 
@@ -802,7 +926,10 @@ class Options implements \Stringable
 		if (is_string($format)) {
 			$format = strtolower($format);
 			// Small Pics transforms support both "jpg" and "jpeg" as possible values for "jpg".
-			$format = $format === 'jpeg' ? Format::JPG : Format::from($format);
+			$format = match ($format) {
+				'jpeg' => Format::JPG,
+				default => Format::from($format),
+			};
 		}
 
 		$this->options[self::FORMAT] = $format->value;
@@ -845,6 +972,7 @@ class Options implements \Stringable
 	 */
 	public function setParam(string $key, int|float|string|bool $value): self
 	{
+		unset($this->legacyFitParams[$key]);
 		$this->options[$key] = is_bool($value) ? ($value ? '1' : '0') : $value;
 		return $this;
 	}
@@ -874,7 +1002,7 @@ class Options implements \Stringable
 	}
 
 	/**
-	 * @return string[]
+	 * @return array<non-empty-string, non-empty-string>
 	 */
 	public static function allOptions(): array
 	{
@@ -882,6 +1010,12 @@ class Options implements \Stringable
 			self::ORIENTATION => 'orientation',
 			self::FLIP => 'flip',
 			self::CROP => 'crop',
+			self::FOCAL_POINT => 'focalPoint',
+			self::ZOOM => 'zoom',
+			self::ZOOM_PADDING => 'zoomPadding',
+			self::FACE => 'face',
+			self::DEBUG => 'debug',
+			self::PASSTHROUGH => 'passthrough',
 			self::WIDTH => 'width',
 			self::HEIGHT => 'height',
 			self::ASPECT_RATIO => 'aspectRatio',
@@ -917,38 +1051,50 @@ class Options implements \Stringable
 	 */
 	private function setBaseFit(string $key, string|Fit $fit, null|string|CropPosition $cropPosition = null, ?int $focalPointX = null, ?int $focalPointY = null, ?int $zoom = null): self
 	{
-		if (is_string($fit)) {
-			$fit = Fit::from($fit);
+		$value = $fit instanceof Fit ? $fit->value : strtolower($fit);
+		$inlineZoom = null;
+		if (preg_match('/^(?:cover|crop)-(top-left|top|top-right|left|center|right|bottom-left|bottom|bottom-right)$/', $value, $matches)) {
+			$cropPosition ??= $matches[1];
+			$value = 'crop';
+		} elseif (preg_match('/^crop-(\d+)-(\d+)(?:-([\d.]+))?$/', $value, $matches)) {
+			$focalPointX ??= (int) $matches[1];
+			$focalPointY ??= (int) $matches[2];
+			$inlineZoom = isset($matches[3]) ? (float) $matches[3] : null;
+			$value = 'crop';
 		}
 
-		if ($fit === Fit::CROP) {
-			$args = [$fit->value];
+		$this->options[$key] = Fit::from($value === 'cover' ? 'crop' : $value)->value;
+		if ($cropPosition !== null) {
+			$this->setLegacyFitParam(self::CROP, $cropPosition instanceof CropPosition ? $cropPosition->value : $cropPosition);
+		}
 
-			if ($focalPointX !== null && $focalPointY !== null) {
-				$args[] = $focalPointX;
-				$args[] = $focalPointY;
-			}
+		if ($focalPointX !== null && $focalPointY !== null) {
+			$this->setLegacyFitParam(self::FOCAL_POINT, $focalPointX . 'p:' . $focalPointY . 'p');
+		}
 
-			if ($zoom !== null) {
-				$args[] = $zoom;
-			}
-
-			$this->options[$key] = implode('-', $args);
-		} elseif ($fit === Fit::COVER) {
-			if ($cropPosition === null) {
-				$cropPosition = CropPosition::CENTER;
-			}
-
-			if (is_string($cropPosition)) {
-				$cropPosition = CropPosition::from($cropPosition);
-			}
-
-			$this->options[$key] = $cropPosition->value;
-		} else {
-			$this->options[$key] = $fit->value;
+		if ($zoom !== null || $inlineZoom !== null) {
+			$this->setLegacyFitParam(self::ZOOM, $zoom ?? $inlineZoom);
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @param 'crop'|'fp'|'zoom' $key
+	 */
+	private function setLegacyFitParam(string $key, int|float|string $value): void
+	{
+		if (isset($this->options[$key]) && ! isset($this->legacyFitParams[$key])) {
+			return;
+		}
+
+		match ($key) {
+			self::CROP => $this->setCropPosition((string) $value),
+			self::FOCAL_POINT => $this->setFocalPoint($value),
+			self::ZOOM => $this->setZoom($value),
+		};
+		
+		$this->legacyFitParams[$key] = true;
 	}
 
 	/**
@@ -956,26 +1102,19 @@ class Options implements \Stringable
 	 */
 	private function getBaseFit(string $key): null|Fit|array
 	{
-		/** @var null|string $value */
-		$value = $this->options[$key];
-
+		$value = $this->options[$key] ?? null;
 		if ($value === null) {
 			return null;
 		}
 
-		if (str_starts_with($value, Fit::CROP->value)) {
-			[$fit, $focalPointX, $focalPointY, $zoom] = explode('-', $value) + [null, null, null, null];
-			return [
-				Fit::CROP,
-				null,
-				$focalPointX !== null ? (int) $focalPointX : null,
-				$focalPointY !== null ? (int) $focalPointY : null,
-				$zoom !== null ? (int) $zoom : null,
-			];
+		$value = (string) $value;
+		if (preg_match('/^(cover|crop)-(top-left|top|top-right|left|center|right|bottom-left|bottom|bottom-right)$/', $value, $matches)) {
+			return [Fit::from($matches[1]), CropPosition::from($matches[2]), null, null, null];
 		}
 
-		if ($value === Fit::COVER->value) {
-			return [Fit::COVER, CropPosition::from($value), null, null, null];
+		if ($value === 'crop' || preg_match('/^crop-\d+-\d+(?:-[\d.]+)?$/', $value)) {
+			$parts = explode('-', $value);
+			return [Fit::CROP, null, isset($parts[1]) ? (int) $parts[1] : null, isset($parts[2]) ? (int) $parts[2] : null, isset($parts[3]) ? (int) $parts[3] : null];
 		}
 
 		return Fit::from($value);

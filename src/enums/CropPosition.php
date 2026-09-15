@@ -4,13 +4,13 @@ namespace smallpics\smallpics\enums;
 
 enum CropPosition: string
 {
-	case TOP_LEFT = 'cover-top-left';
-	case TOP = 'cover-top';
-	case TOP_RIGHT = 'cover-top-right';
-	case LEFT = 'cover-left';
-	case CENTER = 'cover-center';
-	case RIGHT = 'cover-right';
-	case BOTTOM_LEFT = 'cover-bottom-left';
-	case BOTTOM = 'cover-bottom';
-	case BOTTOM_RIGHT = 'cover-bottom-right';
+	case TOP_LEFT = 'top-left';
+	case TOP = 'top';
+	case TOP_RIGHT = 'top-right';
+	case LEFT = 'left';
+	case CENTER = 'center';
+	case RIGHT = 'right';
+	case BOTTOM_LEFT = 'bottom-left';
+	case BOTTOM = 'bottom';
+	case BOTTOM_RIGHT = 'bottom-right';
 }
