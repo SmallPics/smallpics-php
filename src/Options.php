@@ -1093,7 +1093,7 @@ class Options implements \Stringable
 			self::FOCAL_POINT => $this->setFocalPoint($value),
 			self::ZOOM => $this->setZoom($value),
 		};
-		
+
 		$this->legacyFitParams[$key] = true;
 	}
 
