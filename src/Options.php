@@ -124,18 +124,6 @@ class Options implements \Stringable
 	public const WATERMARK_FIT = 'markfit';
 
 	/**
-	 * @deprecated Use WATERMARK_PADDING instead.
-	 * @var string
-	 */
-	public const WATERMARK_X_OFFSET = 'markx';
-
-	/**
-	 * @deprecated Use WATERMARK_PADDING instead.
-	 * @var string
-	 */
-	public const WATERMARK_Y_OFFSET = 'marky';
-
-	/**
 	 * @var string
 	 */
 	public const WATERMARK_PADDING = 'markpad';
@@ -188,11 +176,6 @@ class Options implements \Stringable
 	protected string $optionSeparator = '&';
 
 	/**
-	 * @var array<string, true>
-	 */
-	private array $legacyFitParams = [];
-
-	/**
 	 * @param array<string, mixed> $options
 	 */
 	public function __construct(array $options = [])
@@ -201,7 +184,6 @@ class Options implements \Stringable
 			$option = self::allOptions()[$option] ?? $option;
 			$method = 'set' . $this->toPascalCase($option);
 			if ($method === 'setBorder' && is_string($value)) {
-				// Catch any usages of deprecated "pad"
 				$value = explode(',', $value);
 				$value[2] ??= BorderMethod::OVERLAY;
 			}
@@ -287,31 +269,22 @@ class Options implements \Stringable
 		return $value;
 	}
 
-	/**
-	 * Set fit
-	 *
-	 * Extra positioning arguments are deprecated; use setCropPosition(), setFocalPoint() and setZoom().
-	 */
-	public function setFit(string|Fit $fit, null|string|CropPosition $cropPosition = null, ?int $focalPointX = null, ?int $focalPointY = null, ?int $zoom = null): self
+	public function setFit(string|Fit $fit): self
 	{
-		return $this->setBaseFit(self::FIT, $fit, $cropPosition, $focalPointX, $focalPointY, $zoom);
+		$this->options[self::FIT] = ($fit instanceof Fit ? $fit : Fit::from($fit))->value;
+		return $this;
 	}
 
-	/**
-	 * Get fit
-	 *
-	 * @return null|Fit|array{Fit, ?CropPosition, ?int, ?int, ?int}
-	 */
-	public function getFit(): null|Fit|array
+	public function getFit(): ?Fit
 	{
-		return $this->getBaseFit(self::FIT);
+		$value = $this->options[self::FIT] ?? null;
+		return $value === null ? null : Fit::from((string) $value);
 	}
 
 	public function setCropPosition(string|CropPosition $position): self
 	{
-		unset($this->legacyFitParams[self::CROP]);
 		$value = $position instanceof CropPosition ? $position->value : $position;
-		$this->options[self::CROP] = (string) preg_replace('/^(?:cover|crop)-/', '', $value);
+		$this->options[self::CROP] = $value;
 		return $this;
 	}
 
@@ -323,7 +296,6 @@ class Options implements \Stringable
 
 	public function setFocalPoint(int|float|string $value, int|float|string|null $y = null): self
 	{
-		unset($this->legacyFitParams[self::FOCAL_POINT]);
 		$this->options[self::FOCAL_POINT] = $y === null ? $value : $value . ':' . $y;
 		return $this;
 	}
@@ -337,7 +309,6 @@ class Options implements \Stringable
 
 	public function setZoom(int|float|string $value, int|float|null $fallback = null): self
 	{
-		unset($this->legacyFitParams[self::ZOOM]);
 		$this->options[self::ZOOM] = $fallback === null ? $value : $value . ',' . $fallback;
 		return $this;
 	}
@@ -410,7 +381,6 @@ class Options implements \Stringable
 	 */
 	public function setCrop(int|string|CropPosition $width, ?int $height = null, ?int $x = null, ?int $y = null): self
 	{
-		unset($this->legacyFitParams[self::CROP]);
 		if ($height === null && $x === null && $y === null && ($width instanceof CropPosition || is_string($width))) {
 			return $this->setCropPosition($width);
 		}
@@ -731,62 +701,16 @@ class Options implements \Stringable
 		return $this->options[self::WATERMARK_HEIGHT] ?? null;
 	}
 
-	/**
-	 * Set watermark fit. Extra positioning arguments are deprecated; use setCropPosition(), setFocalPoint() and setZoom().
-	 */
-	public function setWatermarkFit(string|Fit $fit, null|string|CropPosition $cropPosition = null, ?int $focalPointX = null, ?int $focalPointY = null, ?int $zoom = null): self
+	public function setWatermarkFit(string|Fit $fit): self
 	{
-		return $this->setBaseFit(self::WATERMARK_FIT, $fit, $cropPosition, $focalPointX, $focalPointY, $zoom);
-	}
-
-	/**
-	 * Get watermark fit
-	 *
-	 * @return null|Fit|array{Fit, ?CropPosition, ?int, ?int, ?int}
-	 */
-	public function getWatermarkFit(): null|Fit|array
-	{
-		return $this->getBaseFit(self::WATERMARK_FIT);
-	}
-
-	/**
-	 * @deprecated Use setWatermarkPadding() instead.
-	 */
-	public function setWatermarkXOffset(int|float|string $watermarkXOffset): self
-	{
-		$this->options[self::WATERMARK_X_OFFSET] = $watermarkXOffset;
+		$this->options[self::WATERMARK_FIT] = ($fit instanceof Fit ? $fit : Fit::from($fit))->value;
 		return $this;
 	}
 
-	/**
-	 * @deprecated Use getWatermarkPadding() instead.
-	 */
-	public function getWatermarkXOffset(): null|int|float|string
+	public function getWatermarkFit(): ?Fit
 	{
-		/** @var null|int|float|string $value */
-		$value = $this->options[self::WATERMARK_X_OFFSET] ?? null;
-
-		return $value;
-	}
-
-	/**
-	 * @deprecated Use setWatermarkPadding() instead.
-	 */
-	public function setWatermarkYOffset(int|float|string $watermarkYOffset): self
-	{
-		$this->options[self::WATERMARK_Y_OFFSET] = $watermarkYOffset;
-		return $this;
-	}
-
-	/**
-	 * @deprecated Use getWatermarkPadding() instead.
-	 */
-	public function getWatermarkYOffset(): null|int|float|string
-	{
-		/** @var null|int|float|string $value */
-		$value = $this->options[self::WATERMARK_Y_OFFSET] ?? null;
-
-		return $value;
+		$value = $this->options[self::WATERMARK_FIT] ?? null;
+		return $value === null ? null : Fit::from((string) $value);
 	}
 
 	public function setWatermarkPadding(int|float|string $watermarkPadding): self
@@ -875,7 +799,7 @@ class Options implements \Stringable
 			$borderMethod = BorderMethod::from($borderMethod);
 		}
 
-		$this->options[self::BORDER] = implode(',', [$width, $color, $borderMethod === BorderMethod::PAD ? BorderMethod::EXPAND->value : $borderMethod->value]);
+		$this->options[self::BORDER] = implode(',', [$width, $color, $borderMethod->value]);
 		return $this;
 	}
 
@@ -972,7 +896,6 @@ class Options implements \Stringable
 	 */
 	public function setParam(string $key, int|float|string|bool $value): self
 	{
-		unset($this->legacyFitParams[$key]);
 		$this->options[$key] = is_bool($value) ? ($value ? '1' : '0') : $value;
 		return $this;
 	}
@@ -1033,8 +956,6 @@ class Options implements \Stringable
 			self::WATERMARK_WIDTH => 'watermarkWidth',
 			self::WATERMARK_HEIGHT => 'watermarkHeight',
 			self::WATERMARK_FIT => 'watermarkFit',
-			self::WATERMARK_X_OFFSET => 'watermarkXOffset',
-			self::WATERMARK_Y_OFFSET => 'watermarkYOffset',
 			self::WATERMARK_PADDING => 'watermarkPadding',
 			self::WATERMARK_POSITION => 'watermarkPosition',
 			self::WATERMARK_ALPHA => 'watermarkAlpha',
@@ -1044,80 +965,6 @@ class Options implements \Stringable
 			self::FORMAT => 'format',
 			self::INTERLACE => 'interlaced',
 		];
-	}
-
-	/**
-	 * @param non-empty-string $key
-	 */
-	private function setBaseFit(string $key, string|Fit $fit, null|string|CropPosition $cropPosition = null, ?int $focalPointX = null, ?int $focalPointY = null, ?int $zoom = null): self
-	{
-		$value = $fit instanceof Fit ? $fit->value : strtolower($fit);
-		$inlineZoom = null;
-		if (preg_match('/^(?:cover|crop)-(top-left|top|top-right|left|center|right|bottom-left|bottom|bottom-right)$/', $value, $matches)) {
-			$cropPosition ??= $matches[1];
-			$value = 'crop';
-		} elseif (preg_match('/^crop-(\d+)-(\d+)(?:-([\d.]+))?$/', $value, $matches)) {
-			$focalPointX ??= (int) $matches[1];
-			$focalPointY ??= (int) $matches[2];
-			$inlineZoom = isset($matches[3]) ? (float) $matches[3] : null;
-			$value = 'crop';
-		}
-
-		$this->options[$key] = Fit::from($value === 'cover' ? 'crop' : $value)->value;
-		if ($cropPosition !== null) {
-			$this->setLegacyFitParam(self::CROP, $cropPosition instanceof CropPosition ? $cropPosition->value : $cropPosition);
-		}
-
-		if ($focalPointX !== null && $focalPointY !== null) {
-			$this->setLegacyFitParam(self::FOCAL_POINT, $focalPointX . 'p:' . $focalPointY . 'p');
-		}
-
-		if ($zoom !== null || $inlineZoom !== null) {
-			$this->setLegacyFitParam(self::ZOOM, $zoom ?? $inlineZoom);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @param 'crop'|'fp'|'zoom' $key
-	 */
-	private function setLegacyFitParam(string $key, int|float|string $value): void
-	{
-		if (isset($this->options[$key]) && ! isset($this->legacyFitParams[$key])) {
-			return;
-		}
-
-		match ($key) {
-			self::CROP => $this->setCropPosition((string) $value),
-			self::FOCAL_POINT => $this->setFocalPoint($value),
-			self::ZOOM => $this->setZoom($value),
-		};
-
-		$this->legacyFitParams[$key] = true;
-	}
-
-	/**
-	 * @return null|Fit|array{Fit, ?CropPosition, ?int, ?int, ?int}
-	 */
-	private function getBaseFit(string $key): null|Fit|array
-	{
-		$value = $this->options[$key] ?? null;
-		if ($value === null) {
-			return null;
-		}
-
-		$value = (string) $value;
-		if (preg_match('/^(cover|crop)-(top-left|top|top-right|left|center|right|bottom-left|bottom|bottom-right)$/', $value, $matches)) {
-			return [Fit::from($matches[1]), CropPosition::from($matches[2]), null, null, null];
-		}
-
-		if ($value === 'crop' || preg_match('/^crop-\d+-\d+(?:-[\d.]+)?$/', $value)) {
-			$parts = explode('-', $value);
-			return [Fit::CROP, null, isset($parts[1]) ? (int) $parts[1] : null, isset($parts[2]) ? (int) $parts[2] : null, isset($parts[3]) ? (int) $parts[3] : null];
-		}
-
-		return Fit::from($value);
 	}
 
 	private function toPascalCase(string $input): string

@@ -2,6 +2,10 @@
 
 Build image transform URLs for [Small Pics](https://www.smallpics.io) in PHP.
 
+## Upgrading
+
+- [v1 to v2](migrating-v1-v2.md) upgrade guide
+
 ## Requirements
 
 - PHP 8.1+
@@ -9,7 +13,7 @@ Build image transform URLs for [Small Pics](https://www.smallpics.io) in PHP.
 ## Installation
 
 ```bash
-composer require smallpics/smallpics-php
+composer require smallpics/smallpics-php:^2.0.0
 ```
 
 ## Quick Start
@@ -172,7 +176,7 @@ Use fluent setters, constructor options, or `setParam()` for serialized query va
 
 ### Fit and Crop Position
 
-`setFit()` and `setWatermarkFit()` accept `contain`, `max`, `fill`, `fill-max`, `stretch`, `crop`, and the deprecated values below.
+`setFit()` and `setWatermarkFit()` accept `contain`, `max`, `fill`, `fill-max`, `stretch`, and `crop`.
 
 Use `setCropPosition('top')` or constructor `['crop' => 'top']` for a named crop. Anchors are `top-left`, `top`, `top-right`, `left`, `center`, `right`, `bottom-left`, `bottom`, and `bottom-right`.
 
@@ -194,24 +198,6 @@ $options = (new Options())
     ->setZoomPadding('5p', '10p')
     ->setDebug(true);
 // fit=crop&crop=face,top&face=1&zoom=face,2.5&zoompad=5p:10p&debug=1
-```
-
-### Deprecated Helpers and Values
-
-`setWatermarkXOffset()` / `getWatermarkXOffset()` and their Y equivalents remain available and accept integer, decimal, and relative offsets. They emit `markx` and `marky`. Prefer `setWatermarkPosition('10:20')` or `setWatermarkPadding('10:20')` for new code. Numeric `markpos` overrides legacy offsets; explicit `markpad` takes priority over both.
-
-`Fit::COVER` and plain `cover` emit `crop`. Focal strings such as `crop-25-75-2.5` are still accepted. They emit the current fit and separate `crop`, `fp`, and `zoom` parameters. Legacy focal coordinates become percentages. Explicit current parameters take priority, regardless of option order.
-
-`BorderMethod::PAD` and `pad` remain accepted and emit `expand`.
-
-```php
-$options = (new Options())
-    ->setFit(Fit::CROP, null, 25, 75, 2)
-    ->setWatermarkFit('crop')
-    ->setCropPosition('top-left')
-    ->setWatermarkXOffset(10)
-    ->setWatermarkYOffset(20);
-// fit=crop&fp=25p:75p&zoom=2&markfit=crop&crop=top-left&markx=10&marky=20
 ```
 
 ### Relative Values

@@ -224,16 +224,11 @@ test('can build URL with watermark dimensions', function (): void {
 	expect($url)->toBe('https://images.example.com/images/image.jpg?markh=50&markw=100');
 });
 
-test('can build URL with watermark offsets and padding', function (): void {
+test('can build URL with watermark coordinates and padding', function (): void {
 	$options = createOptions();
-	$options->setWatermarkXOffset(10)
-		->setWatermarkYOffset(20)
-		->setWatermarkPadding(5);
-
+	$options->setWatermarkPosition('10:20')->setWatermarkPadding('5:10');
 	$builder = new UrlBuilder('https://images.example.com');
-	$url = $builder->buildUrl('images/image.jpg', $options);
-
-	expect($url)->toBe('https://images.example.com/images/image.jpg?markpad=5&markx=10&marky=20');
+	expect($builder->buildUrl('images/image.jpg', $options))->toBe('https://images.example.com/images/image.jpg?markpad=5:10&markpos=10:20');
 });
 
 test('can build URL with watermark fit', function (): void {

@@ -1,7 +1,10 @@
 <?php
 
 
+use smallpics\smallpics\enums\Fit;
 use smallpics\smallpics\enums\Format;
+use smallpics\smallpics\Options;
+use smallpics\smallpics\UrlBuilder;
 
 test('can set options with individual setters', function (): void {
 	$options = createOptions();
@@ -211,4 +214,27 @@ test('background and border options work', function (): void {
 	expect($border[0])->toBe('5')
 		->and($border[1])->toBe('ff0000')
 		->and($border[2]->value)->toBe('overlay');
+});
+
+test('fit setters return the selected fit enum', function (): void {
+	foreach ([
+		'setFit' => 'getFit',
+		'setWatermarkFit' => 'getWatermarkFit',
+	] as $setter => $getter) {
+		foreach (Fit::cases() as $fit) {
+			$options = (new Options())->{$setter}($fit);
+			expect($options->{$getter}())->toBe($fit);
+		}
+	}
+});
+
+test('current fit calls emit separate parameters', function (): void {
+	$builder = new UrlBuilder('https://images.example.com');
+	foreach ([
+		'setFit' => 'crop=top&fit=crop&fp=25p:75p&zoom=2',
+		'setWatermarkFit' => 'crop=top&fp=25p:75p&markfit=crop&zoom=2',
+	] as $setter => $query) {
+		$options = (new Options())->{$setter}('crop')->setCropPosition('top')->setFocalPoint('25p', '75p')->setZoom(2);
+		expect($builder->buildUrl('bird.jpg', $options))->toBe('https://images.example.com/bird.jpg?' . $query);
+	}
 });

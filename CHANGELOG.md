@@ -2,6 +2,8 @@
 
 ## 2.0.0 - Unreleased
 
+> {warning} This update contains breaking changes. Read the [upgrade guide](https://github.com/SmallPics/smallpics-php/blob/main/migrating-v1-v2.md) before updating.
+
 ### Added
 
 - Add `fp` for focal points.
@@ -13,10 +15,13 @@
 
 ### Updated
 
-- Deprecate `fit` values: `cover`, `cover-{position}`, `crop-{position}`, `crop-{x}-{y}`, and `crop-{x}-{y}-{zoom}`.
-- Deprecate `markfit` values: `cover`, `cover-{position}`, `crop-{position}`, `crop-{x}-{y}`, and `crop-{x}-{y}-{zoom}`.
-- Deprecate `markx`; use `markpos` or `markpad`.
-- Deprecate `marky`; use `markpos` or `markpad`.
+- Remove extra fit arguments.
+- Return fit enums instead of crop tuples.
+- Remove `cover-` from `CropPosition` values.
+- Remove `fit` values: `cover`, `cover-{position}`, `crop-{position}`, `crop-{x}-{y}`, and `crop-{x}-{y}-{zoom}`.
+- Remove `markfit` values: `cover`, `cover-{position}`, `crop-{position}`, `crop-{x}-{y}`, and `crop-{x}-{y}-{zoom}`.
+- Remove `markx`; use `markpos` or `markpad`.
+- Remove `marky`; use `markpos` or `markpad`.
 - Support named and face positions in `crop`.
 - Support relative and decimal values in `w` and `h`.
 - Support `width:height` values in `ar`.
@@ -24,7 +29,7 @@
 - Support `p` units in `markw` and `markh`.
 - Support coordinates and relative values in `markpos`.
 - Support paired and relative values in `markpad`.
-- Support `expand` and `p` units in `border`; retain deprecated `pad`.
+- Replace `pad` with `expand`; support `p` units in `border`.
 
 ## 1.2.0 - 2026-08-14
 
