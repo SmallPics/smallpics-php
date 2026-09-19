@@ -126,6 +126,16 @@ class Options implements \Stringable
 	/**
 	 * @var string
 	 */
+	public const WATERMARK_FOCAL_POINT = 'markfp';
+
+	/**
+	 * @var string
+	 */
+	public const WATERMARK_ZOOM = 'markzoom';
+
+	/**
+	 * @var string
+	 */
 	public const WATERMARK_PADDING = 'markpad';
 
 	/**
@@ -713,6 +723,32 @@ class Options implements \Stringable
 		return $value === null ? null : Fit::from((string) $value);
 	}
 
+	public function setWatermarkFocalPoint(int|float|string $value, int|float|string|null $y = null): self
+	{
+		$this->options[self::WATERMARK_FOCAL_POINT] = $y === null ? $value : $value . ':' . $y;
+		return $this;
+	}
+
+	public function getWatermarkFocalPoint(): null|int|float|string
+	{
+		/** @var null|int|float|string $value */
+		$value = $this->options[self::WATERMARK_FOCAL_POINT] ?? null;
+		return $value;
+	}
+
+	public function setWatermarkZoom(int|float|string $value): self
+	{
+		$this->options[self::WATERMARK_ZOOM] = $value;
+		return $this;
+	}
+
+	public function getWatermarkZoom(): null|int|float|string
+	{
+		/** @var null|int|float|string $value */
+		$value = $this->options[self::WATERMARK_ZOOM] ?? null;
+		return $value;
+	}
+
 	public function setWatermarkPadding(int|float|string $watermarkPadding): self
 	{
 		$this->options[self::WATERMARK_PADDING] = $watermarkPadding;
@@ -956,6 +992,8 @@ class Options implements \Stringable
 			self::WATERMARK_WIDTH => 'watermarkWidth',
 			self::WATERMARK_HEIGHT => 'watermarkHeight',
 			self::WATERMARK_FIT => 'watermarkFit',
+			self::WATERMARK_FOCAL_POINT => 'watermarkFocalPoint',
+			self::WATERMARK_ZOOM => 'watermarkZoom',
 			self::WATERMARK_PADDING => 'watermarkPadding',
 			self::WATERMARK_POSITION => 'watermarkPosition',
 			self::WATERMARK_ALPHA => 'watermarkAlpha',

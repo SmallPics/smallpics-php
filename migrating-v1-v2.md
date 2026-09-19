@@ -177,7 +177,7 @@ $options = new Options([
 
 ## Watermark fit
 
-`setWatermarkFit()` also takes one argument.
+`setWatermarkFit()` takes one argument. Use `markfp` for the focal point and `markzoom` for zoom. Set both `markw` and `markh` when cropping without zoom.
 
 **Before:**
 
@@ -190,9 +190,9 @@ $options->setWatermarkFit('crop', null, 25, 75, 2);
 
 ```php
 $options->setWatermarkFit('crop')
-    ->setFocalPoint('25p', '75p')
-    ->setZoom(2);
-// ?fp=25p:75p&markfit=crop&zoom=2
+    ->setWatermarkFocalPoint('25p', '75p')
+    ->setWatermarkZoom(2);
+// ?markfit=crop&markfp=25p:75p&markzoom=2
 ```
 
 **Before:**
@@ -206,10 +206,12 @@ $options = new Options(['markfit' => 'cover-top']);
 
 ```php
 $options = new Options([
+    'markw' => 100,
+    'markh' => 50,
     'markfit' => 'crop',
-    'crop' => 'top',
+    'markfp' => '50p:0',
 ]);
-// ?crop=top&markfit=crop
+// ?markfit=crop&markfp=50p:0&markh=50&markw=100
 ```
 
 ### PHP associative array with focal point and zoom
@@ -226,10 +228,10 @@ $options = new Options(['markfit' => 'crop-25-75-2']);
 ```php
 $options = new Options([
     'markfit' => 'crop',
-    'fp' => '25p:75p',
-    'zoom' => 2,
+    'markfp' => '25p:75p',
+    'markzoom' => 2,
 ]);
-// ?fp=25p:75p&markfit=crop&zoom=2
+// ?markfit=crop&markfp=25p:75p&markzoom=2
 ```
 
 ### Chained setters with a named position
@@ -244,8 +246,11 @@ $options->setWatermarkFit(Fit::COVER, CropPosition::TOP);
 **After:**
 
 ```php
-$options->setWatermarkFit(Fit::CROP)->setCropPosition(CropPosition::TOP);
-// ?crop=top&markfit=crop
+$options->setWatermarkWidth(100)
+    ->setWatermarkHeight(50)
+    ->setWatermarkFit(Fit::CROP)
+    ->setWatermarkFocalPoint('50p', 0);
+// ?markfit=crop&markfp=50p:0&markh=50&markw=100
 ```
 
 ## Reading fit values
@@ -271,7 +276,7 @@ $zoom = $options->getZoom(); // 2
 // ?fit=crop&fp=25p:75p&zoom=2
 ```
 
-Use `getWatermarkFit()` the same way: read the fit enum there, and read position, focal point, and zoom separately.
+Read watermark values with `getWatermarkFit()`, `getWatermarkFocalPoint()`, and `getWatermarkZoom()`. `getWatermarkPosition()` returns placement on the main image.
 
 ## Watermark offsets
 

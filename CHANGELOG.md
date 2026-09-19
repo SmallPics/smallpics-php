@@ -6,6 +6,8 @@
 
 ### Added
 
+- Add `markfp` for watermark focal points.
+- Add `markzoom` for watermark zoom.
 - Add `fp` for focal points.
 - Add `zoom` for numeric and face zoom.
 - Add `zoompad` for zoom padding.

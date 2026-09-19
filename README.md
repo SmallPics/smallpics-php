@@ -137,42 +137,46 @@ Available enums are `BorderMethod`, `Filter`, `Fit`, `Format`, and `WatermarkPos
 
 Use fluent setters, constructor options, or `setParam()` for serialized query values. Refer to the [Small Pics documentation](https://www.smallpics.io/docs/) for processing behavior and valid ranges.
 
-| Query parameter | Setter | Accepted values | Example |
-| --- | --- | --- | --- |
-| `or` | `setOrientation()` | `0`, `90`, `180`, `270`, or `auto` | `->setOrientation('auto')` |
-| `flip` | `setFlip()` | `v`, `h`, or `both` | `->setFlip('h')` |
-| `crop` | `setCrop()` / `setCropPosition()` | Named anchor, `face[,fallback]`, `facesarea[,fallback]`, or width, height, x, y | `->setCrop(400, 300, 10, 20)` |
-| `w` | `setWidth()` | Integer or decimal pixels, or relative dimensions | `->setWidth('65p')` |
-| `h` | `setHeight()` | Integer or decimal pixels, or relative dimensions | `->setHeight('50w')` |
-| `ar` | `setAspectRatio()` | `width:height`, decimal ratio, or dividend and divisor | `->setAspectRatio(16, 9)` |
-| `fit` | `setFit()` | See [Fit and Crop Position](#fit-and-crop-position) | `->setFit('crop')->setCropPosition('top')` |
-| `dpr` | `setDevicePixelRatio()` | Integer or decimal | `->setDevicePixelRatio(1.5)` |
-| `bri` | `setBrightness()` | Integer brightness | `->setBrightness(10)` |
-| `con` | `setContrast()` | Integer contrast | `->setContrast(15)` |
-| `gam` | `setGamma()` | Float gamma | `->setGamma(1.2)` |
-| `sharp` | `setSharpen()` | Integer sharpen amount | `->setSharpen(20)` |
-| `blur` | `setBlur()` | Integer blur amount | `->setBlur(5)` |
-| `pixel` | `setPixelate()` | Integer pixelate amount | `->setPixelate(8)` |
-| `filt` | `setFilter()` | `grayscale` or `sepia` | `->setFilter('grayscale')` |
-| `mark` | `setWatermarkPath()` | Watermark image path | `->setWatermarkPath('/watermark.png')` |
-| `markorigin` | `setWatermarkOrigin()` | Watermark origin name | `->setWatermarkOrigin('default')` |
-| `markw` | `setWatermarkWidth()` | Integer, decimal, or relative width | `->setWatermarkWidth('20w')` |
-| `markh` | `setWatermarkHeight()` | Integer, decimal, or relative height | `->setWatermarkHeight('20h')` |
-| `markfit` | `setWatermarkFit()` | See [Fit and Crop Position](#fit-and-crop-position) | `->setWatermarkFit('contain')` |
-| `markpad` | `setWatermarkPadding()` | Pixels, relative values, or `x:y` | `->setWatermarkPadding(16)` |
-| `markpos` | `setWatermarkPosition()` | Named anchor, numeric coordinate, or pixel/relative `x:y` string | `->setWatermarkPosition('bottom-right')` |
-| `markalpha` | `setWatermarkAlpha()` | Integer alpha | `->setWatermarkAlpha(80)` |
-| `bg` | `setBackground()` | Background color | `->setBackground('ffffff')` |
-| `border` | `setBorder()` | Width, color, and method | `->setBorder(8, 'ffffff', 'expand')` |
-| `q` | `setQuality()` | Integer quality | `->setQuality(80)` |
-| `fm` | `setFormat()` | See [Output Format](#output-format) | `->setFormat('avif')` |
-| `interlace` | `setInterlaced()` | Boolean | `->setInterlaced(true)` |
-| `fp` | `setFocalPoint()` | Pixels or relative x/y | `->setFocalPoint('25w', '75h')` |
-| `zoom` | `setZoom()` | Numeric, `face`, `facesarea`, optional numeric fallback | `->setZoom('face', 2.5)` |
-| `zoompad` | `setZoomPadding()` | Pixels or relative x/y | `->setZoomPadding(10, 20)` |
-| `face` | `setFace()` | One-based face index | `->setFace(1)` |
-| `debug` | `setDebug()` | Boolean | `->setDebug(true)` |
-| `passthrough` | `setPassthrough()` | Boolean; false removes the flag | `->setPassthrough(true)` |
+| Query parameter | Setter                            | Accepted values                                                                 | Example                                    |
+|-----------------|-----------------------------------|---------------------------------------------------------------------------------|--------------------------------------------|
+| `or`            | `setOrientation()`                | `0`, `90`, `180`, `270`, or `auto`                                              | `->setOrientation('auto')`                 |
+| `flip`          | `setFlip()`                       | `v`, `h`, or `both`                                                             | `->setFlip('h')`                           |
+| `crop`          | `setCrop()` / `setCropPosition()` | Named anchor, `face[,fallback]`, `facesarea[,fallback]`, or width, height, x, y | `->setCrop(400, 300, 10, 20)`              |
+| `w`             | `setWidth()`                      | Integer or decimal pixels, or relative dimensions                               | `->setWidth('65p')`                        |
+| `h`             | `setHeight()`                     | Integer or decimal pixels, or relative dimensions                               | `->setHeight('50w')`                       |
+| `ar`            | `setAspectRatio()`                | `width:height`, decimal ratio, or dividend and divisor                          | `->setAspectRatio(16, 9)`                  |
+| `fit`           | `setFit()`                        | See [Fit and Crop Position](#fit-and-crop-position)                             | `->setFit('crop')->setCropPosition('top')` |
+| `dpr`           | `setDevicePixelRatio()`           | Integer or decimal                                                              | `->setDevicePixelRatio(1.5)`               |
+| `bri`           | `setBrightness()`                 | Integer brightness                                                              | `->setBrightness(10)`                      |
+| `con`           | `setContrast()`                   | Integer contrast                                                                | `->setContrast(15)`                        |
+| `gam`           | `setGamma()`                      | Float gamma                                                                     | `->setGamma(1.2)`                          |
+| `sharp`         | `setSharpen()`                    | Integer sharpen amount                                                          | `->setSharpen(20)`                         |
+| `blur`          | `setBlur()`                       | Integer blur amount                                                             | `->setBlur(5)`                             |
+| `pixel`         | `setPixelate()`                   | Integer pixelate amount                                                         | `->setPixelate(8)`                         |
+| `filt`          | `setFilter()`                     | `grayscale` or `sepia`                                                          | `->setFilter('grayscale')`                 |
+| `mark`          | `setWatermarkPath()`              | Watermark image path                                                            | `->setWatermarkPath('/watermark.png')`     |
+| `markorigin`    | `setWatermarkOrigin()`            | Watermark origin name                                                           | `->setWatermarkOrigin('default')`          |
+| `markw`         | `setWatermarkWidth()`             | Integer, decimal, or relative width                                             | `->setWatermarkWidth('20w')`               |
+| `markh`         | `setWatermarkHeight()`            | Integer, decimal, or relative height                                            | `->setWatermarkHeight('20h')`              |
+| `markfit`       | `setWatermarkFit()`               | See [Fit and Crop Position](#fit-and-crop-position)                             | `->setWatermarkFit('contain')`             |
+| `markfp`        | `setWatermarkFocalPoint()`        | Pixels, relative values, or `x:y` within the watermark                          | `->setWatermarkFocalPoint('20p', '20p')`   |
+| `markzoom`      | `setWatermarkZoom()`              | Numeric zoom from `1` to `100`                                                  | `->setWatermarkZoom(2)`                    |
+| `markpad`       | `setWatermarkPadding()`           | Pixels, relative values, or `x:y`                                               | `->setWatermarkPadding(16)`                |
+| `markpos`       | `setWatermarkPosition()`          | Named anchor, numeric coordinate, or pixel/relative `x:y` string                | `->setWatermarkPosition('bottom-right')`   |
+| `markalpha`     | `setWatermarkAlpha()`             | Integer alpha                                                                   | `->setWatermarkAlpha(80)`                  |
+| `bg`            | `setBackground()`                 | Background color                                                                | `->setBackground('ffffff')`                |
+| `border`        | `setBorder()`                     | Width, color, and method                                                        | `->setBorder(8, 'ffffff', 'expand')`       |
+| `q`             | `setQuality()`                    | Integer quality                                                                 | `->setQuality(80)`                         |
+| `fm`            | `setFormat()`                     | See [Output Format](#output-format)                         | `->setFormat('avif')`                      |
+| `interlace`     | `setInterlaced()`                 | Boolean                                                                         | `->setInterlaced(true)`                    |
+| `fp`            | `setFocalPoint()`                 | Pixels or relative x/y                                                          | `->setFocalPoint('25w', '75h')`            |
+| `zoom`          | `setZoom()`                       | Numeric, `face`, `facesarea`, optional numeric fallback                         | `->setZoom('face', 2.5)`                   |
+| `zoompad`       | `setZoomPadding()`                | Pixels or relative x/y                                                          | `->setZoomPadding(10, 20)`                 |
+| `face`          | `setFace()`                       | One-based face index                                                            | `->setFace(1)`                             |
+| `debug`         | `setDebug()`                      | Boolean                                                                         | `->setDebug(true)`                         |
+| `passthrough`   | `setPassthrough()`                | Boolean; false removes the flag                                                 | `->setPassthrough(true)`                   |
+
+Dimensions accept decimal pixels and `p`, `w`, or `h` percentage units. For example, `5w` means 5% of the base image's width, and `35h` means 35% of its height. Paired values accept serialized `x:y` strings.
 
 ### Fit and Crop Position
 
@@ -187,6 +191,20 @@ $options->setFit('crop')->setCropPosition('top');
 $options->setFocalPoint('25w', '75h')->setZoom(2.5);
 // Adds fp=25w:75h&zoom=2.5
 ```
+
+An 80×80 watermark, zoomed 2× around `20p:20p` and centered:
+
+```php
+$options = (new Options())
+    ->setWatermarkPath('bird.jpg')
+    ->setWatermarkWidth(80)
+    ->setWatermarkHeight(80)
+    ->setWatermarkFit('crop')
+    ->setWatermarkFocalPoint('20p', '20p')
+    ->setWatermarkZoom(2)
+    ->setWatermarkPosition('center');
+```
+
 ### Faces and Zoom
 
 ```php
@@ -228,7 +246,7 @@ Dimension and padding getters preserve numeric and relative values. `getWatermar
 
 `setFormat()` accepts `jpg`, `jpeg`, `pjpg`, `png`, `gif`, `webp`, `avif`, `jxl`. The alias `jpeg` normalizes to `jpg`.
 
-Unless a specific output format is required, omit `fm`. Small Pics can select a format from the request's `Accept` header. If neither a format nor an `Accept` header is present, Small Pics defaults to AVIF.
+Unless a specific output format is required, omit `fm`. Small Pics can select a format from the request's `Accept` header. If neither a format nor an `Accept` header is present, Small Pics defaults to AVIF. GIF images default to WebP, which supports animation.
 
 ```php
 $options->setFormat('jpeg');
