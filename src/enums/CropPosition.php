@@ -13,4 +13,5 @@ enum CropPosition: string
 	case BOTTOM_LEFT = 'bottom-left';
 	case BOTTOM = 'bottom';
 	case BOTTOM_RIGHT = 'bottom-right';
+	case ENTROPY = 'entropy';
 }

@@ -141,7 +141,7 @@ Use fluent setters, constructor options, or `setParam()` for serialized query va
 |-----------------|-----------------------------------|---------------------------------------------------------------------------------|--------------------------------------------|
 | `or`            | `setOrientation()`                | `0`, `90`, `180`, `270`, or `auto`                                              | `->setOrientation('auto')`                 |
 | `flip`          | `setFlip()`                       | `v`, `h`, or `both`                                                             | `->setFlip('h')`                           |
-| `crop`          | `setCrop()` / `setCropPosition()` | Named anchor, `face[,fallback]`, `facesarea[,fallback]`, or width, height, x, y | `->setCrop(400, 300, 10, 20)`              |
+| `crop`          | `setCrop()` / `setCropPosition()` | Named anchor, `entropy`, `face[,fallback]`, `facesarea[,fallback]`, or width, height, x, y | `->setCrop(400, 300, 10, 20)`              |
 | `w`             | `setWidth()`                      | Integer or decimal pixels, or relative dimensions                               | `->setWidth('65p')`                        |
 | `h`             | `setHeight()`                     | Integer or decimal pixels, or relative dimensions                               | `->setHeight('50w')`                       |
 | `ar`            | `setAspectRatio()`                | `width:height`, decimal ratio, or dividend and divisor                          | `->setAspectRatio(16, 9)`                  |

@@ -4,6 +4,31 @@ declare(strict_types=1);
 
 use smallpics\smallpics\enums\CropPosition;
 use smallpics\smallpics\Options;
+use smallpics\smallpics\UrlBuilder;
+
+test('entropy crops generate URLs through strings and enum setters', function (): void {
+	$mode = 'entropy';
+	$position = CropPosition::ENTROPY;
+	$builder = new UrlBuilder('https://images.example.com');
+
+	foreach ([$mode, $position] as $value) {
+		foreach ([
+			new Options([
+				'fit' => 'crop',
+				'crop' => $value,
+				'w' => 300,
+				'h' => 200,
+			]),
+			(new Options())->setFit('crop')->setCropPosition($value)->setWidth(300)->setHeight(200),
+			(new Options())->setFit('crop')->setCrop($value)->setWidth(300)->setHeight(200),
+		] as $options) {
+			expect($options->getCrop())->toBe($mode)
+				->and($options->getCropPosition())->toBe($mode)
+				->and($builder->buildUrl('photo.jpg', $options))
+				->toBe('https://images.example.com/photo.jpg?crop=' . $mode . '&fit=crop&h=200&w=300');
+		}
+	}
+});
 
 test('new values are returned by their getters', function (): void {
 	$options = new Options([
