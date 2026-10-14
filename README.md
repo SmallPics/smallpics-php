@@ -166,6 +166,13 @@ Use fluent setters, constructor options, or `setParam()` for serialized query va
 | `markalpha`     | `setWatermarkAlpha()`             | Integer alpha                                                                   | `->setWatermarkAlpha(80)`                  |
 | `bg`            | `setBackground()`                 | Background color                                                                | `->setBackground('ffffff')`                |
 | `border`        | `setBorder()`                     | Width, color, and method                                                        | `->setBorder(8, 'ffffff', 'expand')`       |
+| `trim` | `setTrim()` | `auto`, `color`, `alpha`, or `either` | `->setTrim('color')` |
+| `trim-color` | `setTrimColor()` | Color to remove | `->setTrimColor('ffffff')` |
+| `trim-alpha` | `setTrimAlpha()` | Alpha threshold, 0 to 255 | `->setTrimAlpha(8)` |
+| `trim-tol` | `setTrimTolerance()` | Tolerance, 0 to 255 | `->setTrimTolerance(8)` |
+| `trim-pad` | `setTrimPadding()` | Source pixels retained around the crop | `->setTrimPadding(8)` |
+| `trim-md` | `setTrimMeanDifference()` | Auto mean difference, 0 to 255 | `->setTrimMeanDifference(8)` |
+| `trim-sd` | `setTrimStandardDeviation()` | Auto standard deviation, 0 to 255 | `->setTrimStandardDeviation(8)` |
 | `q`             | `setQuality()`                    | Integer quality                                                                 | `->setQuality(80)`                         |
 | `fm`            | `setFormat()`                     | See [Output Format](#output-format)                         | `->setFormat('avif')`                      |
 | `interlace`     | `setInterlaced()`                 | Boolean                                                                         | `->setInterlaced(true)`                    |

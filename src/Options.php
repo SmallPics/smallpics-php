@@ -158,6 +158,20 @@ class Options implements \Stringable
 	 */
 	public const BORDER = 'border';
 
+	public const TRIM = 'trim';
+
+	public const TRIM_COLOR = 'trim-color';
+
+	public const TRIM_ALPHA = 'trim-alpha';
+
+	public const TRIM_TOLERANCE = 'trim-tol';
+
+	public const TRIM_PADDING = 'trim-pad';
+
+	public const TRIM_MEAN_DIFFERENCE = 'trim-md';
+
+	public const TRIM_STANDARD_DEVIATION = 'trim-sd';
+
 	/**
 	 * @var string
 	 */
@@ -233,6 +247,94 @@ class Options implements \Stringable
 		}
 
 		return implode($this->optionSeparator, $options);
+	}
+
+	public function setTrim(string $value): self
+	{
+		$this->options[self::TRIM] = $value;
+
+		return $this;
+	}
+
+	public function getTrim(): null|string
+	{
+		$value = $this->options[self::TRIM] ?? null;
+
+		return $value === null ? null : (string) $value;
+	}
+
+	public function setTrimColor(string $value): self
+	{
+		$this->options[self::TRIM_COLOR] = $value;
+
+		return $this;
+	}
+
+	public function getTrimColor(): null|string
+	{
+		$value = $this->options[self::TRIM_COLOR] ?? null;
+
+		return $value === null ? null : (string) $value;
+	}
+
+	public function setTrimAlpha(int|float|string $value): self
+	{
+		$this->options[self::TRIM_ALPHA] = $value;
+
+		return $this;
+	}
+
+	public function getTrimAlpha(): null|int|float|string
+	{
+		return $this->options[self::TRIM_ALPHA] ?? null;
+	}
+
+	public function setTrimTolerance(int|float|string $value): self
+	{
+		$this->options[self::TRIM_TOLERANCE] = $value;
+
+		return $this;
+	}
+
+	public function getTrimTolerance(): null|int|float|string
+	{
+		return $this->options[self::TRIM_TOLERANCE] ?? null;
+	}
+
+	public function setTrimPadding(int|float|string $value): self
+	{
+		$this->options[self::TRIM_PADDING] = $value;
+
+		return $this;
+	}
+
+	public function getTrimPadding(): null|int|float|string
+	{
+		return $this->options[self::TRIM_PADDING] ?? null;
+	}
+
+	public function setTrimMeanDifference(int|float|string $value): self
+	{
+		$this->options[self::TRIM_MEAN_DIFFERENCE] = $value;
+
+		return $this;
+	}
+
+	public function getTrimMeanDifference(): null|int|float|string
+	{
+		return $this->options[self::TRIM_MEAN_DIFFERENCE] ?? null;
+	}
+
+	public function setTrimStandardDeviation(int|float|string $value): self
+	{
+		$this->options[self::TRIM_STANDARD_DEVIATION] = $value;
+
+		return $this;
+	}
+
+	public function getTrimStandardDeviation(): null|int|float|string
+	{
+		return $this->options[self::TRIM_STANDARD_DEVIATION] ?? null;
 	}
 
 	/**
@@ -999,6 +1101,13 @@ class Options implements \Stringable
 			self::WATERMARK_ALPHA => 'watermarkAlpha',
 			self::BACKGROUND => 'background',
 			self::BORDER => 'border',
+			self::TRIM => 'trim',
+			self::TRIM_COLOR => 'trimColor',
+			self::TRIM_ALPHA => 'trimAlpha',
+			self::TRIM_TOLERANCE => 'trimTolerance',
+			self::TRIM_PADDING => 'trimPadding',
+			self::TRIM_MEAN_DIFFERENCE => 'trimMeanDifference',
+			self::TRIM_STANDARD_DEVIATION => 'trimStandardDeviation',
 			self::QUALITY => 'quality',
 			self::FORMAT => 'format',
 			self::INTERLACE => 'interlaced',

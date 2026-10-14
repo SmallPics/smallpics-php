@@ -160,3 +160,47 @@ test('fluent setters accept current compound and numeric values', function (): v
 	$options->setCrop(width: 100, height: 80, x: 10, y: 20);
 	expect($options->getCrop())->toBe([100, 80, 10, 20]);
 });
+
+
+test('trim helpers and constructor aliases preserve generated query values', function (): void {
+	$values = [
+		'Trim' => ['trim', 'either'],
+		'TrimColor' => ['trim-color', 'ffffff'],
+		'TrimAlpha' => ['trim-alpha', 0],
+		'TrimTolerance' => ['trim-tol', 12.5],
+		'TrimPadding' => ['trim-pad', 8],
+		'TrimMeanDifference' => ['trim-md', 11],
+		'TrimStandardDeviation' => ['trim-sd', 10],
+	];
+	$builder = new UrlBuilder('https://images.example.com');
+	foreach ($values as $name => [$key, $value]) {
+		$options = (new Options())->{'set' . $name}($value);
+		expect($options->{'get' . $name}())->toBe($value);
+		foreach ([
+			$options, new Options([
+				$key => $value,
+			]), new Options([
+				lcfirst($name) => $value,
+			])] as $candidate) {
+			expect($builder->buildUrl('photo.png', $candidate))->toBe('https://images.example.com/photo.png?' . $key . '=' . $value);
+		}
+	}
+
+	foreach (['auto', 'color', 'alpha', 'either'] as $mode) {
+		expect((new Options())->setTrim($mode)->toString())->toBe('trim=' . $mode);
+	}
+});
+
+test('border colors preserve decimal opacity and transparent keyword in URLs', function (): void {
+	$builder = new UrlBuilder('https://images.example.com');
+	foreach (['transparent', '00ff0000', '50ff0000', '99ff0000'] as $color) {
+		foreach (['overlay', 'shrink', 'expand'] as $method) {
+			foreach ([
+				(new Options())->setBorder(12, $color, $method), new Options([
+					'border' => '12,' . $color . ',' . $method,
+				])] as $options) {
+				expect($builder->buildUrl('photo.png', $options))->toBe('https://images.example.com/photo.png?border=12,' . $color . ',' . $method);
+			}
+		}
+	}
+});

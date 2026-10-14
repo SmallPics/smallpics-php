@@ -6,6 +6,7 @@
 
 ### Added
 
+- Add `trim` and companion parameters
 - Add `markfp` for watermark focal points.
 - Add `markzoom` for watermark zoom.
 - Add `fp` for focal points.
