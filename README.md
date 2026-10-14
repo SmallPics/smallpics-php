@@ -170,7 +170,7 @@ Use fluent setters, constructor options, or `setParam()` for serialized query va
 | `trim-color` | `setTrimColor()` | Color to remove | `->setTrimColor('ffffff')` |
 | `trim-alpha` | `setTrimAlpha()` | Alpha threshold, 0 to 255 | `->setTrimAlpha(8)` |
 | `trim-tol` | `setTrimTolerance()` | Tolerance, 0 to 255 | `->setTrimTolerance(8)` |
-| `trim-pad` | `setTrimPadding()` | Source pixels retained around the crop | `->setTrimPadding(8)` |
+| `trim-pad` | `setTrimPadding()` | Padding in pixels or [relative values](#relative-values) | `->setTrimPadding(8)` |
 | `trim-md` | `setTrimMeanDifference()` | Auto mean difference, 0 to 255 | `->setTrimMeanDifference(8)` |
 | `trim-sd` | `setTrimStandardDeviation()` | Auto standard deviation, 0 to 255 | `->setTrimStandardDeviation(8)` |
 | `q`             | `setQuality()`                    | Integer quality                                                                 | `->setQuality(80)`                         |
