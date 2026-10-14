@@ -6,7 +6,8 @@
 
 ### Added
 
-- Add `trim` and companion parameters
+- Add `auto` and `strict` format values, including `Format::AUTO` and `Format::STRICT`.
+- Add `trim` and companion parameters.
 - Add `markfp` for watermark focal points.
 - Add `markzoom` for watermark zoom.
 - Add `fp` for focal points.

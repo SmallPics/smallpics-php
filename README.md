@@ -251,9 +251,11 @@ Dimension and padding getters preserve numeric and relative values. `getWatermar
 
 ### Output Format
 
-`setFormat()` accepts `jpg`, `jpeg`, `pjpg`, `png`, `gif`, `webp`, `avif`, `jxl`. The alias `jpeg` normalizes to `jpg`.
+`setFormat()` accepts `strict`, `auto`, `jpg`, `jpeg`, `pjpg`, `png`, `gif`, `webp`, `avif`, `jxl`. The alias `jpeg` normalizes to `jpg`.
 
-Unless a specific output format is required, omit `fm`. Small Pics can select a format from the request's `Accept` header. If neither a format nor an `Accept` header is present, Small Pics defaults to AVIF. GIF images default to WebP, which supports animation.
+Omitting `fm` uses `strict`. With `fm=strict`, a missing or catch-all `Accept` header (`*/*` or `image/*`) preserves the source format. A specific `Accept` header selects the output format.
+
+`fm=auto` always selects a format from `Accept`, falling back to AVIF. GIF inputs use WebP in auto mode, which supports animation.
 
 ```php
 $options->setFormat('jpeg');
